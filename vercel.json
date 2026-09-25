@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/experiment/:path*", "destination": "/index.html" },
+    { "source": "/about", "destination": "/index.html" },
+    { "source": "/privacy", "destination": "/index.html" },
+    { "source": "/participate", "destination": "/index.html" },
+    { "source": "/system-log", "destination": "/index.html" },
+    { "source": "/session/([0-9a-fA-F]{64})", "destination": "/index.html" }
+  ]
+}
