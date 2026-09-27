@@ -67,7 +67,7 @@ test('Observations 1/2 contains only its two questions and continues after eithe
   await expect(subjectTwo).toHaveAttribute('aria-pressed', 'true')
 })
 
-test('Observations preserves local answers between 1/2 and 2/2 and gates the final Continue', async ({ page }) => {
+test('Observations preserves local answers and keeps five-word exercises optional', async ({ page }) => {
   await page.goto('/experiment/00/part-01/observations')
 
   await page.getByRole('button', { name: 'SUBJECT 2', exact: true }).click()
@@ -82,7 +82,8 @@ test('Observations preserves local answers between 1/2 and 2/2 and gates the fin
   await expect(page.locator('#observations-reason')).toHaveCount(0)
   await expect(page.locator('.observations-word-question')).toHaveCount(3)
   await expect(page.locator('.observations-word-input')).toHaveCount(15)
-  await expect(page.locator('.observations-continue-link')).toHaveCount(0)
+  await expect(page.locator('.observations-optional')).toHaveText(['FACULTATIF', 'FACULTATIF', 'FACULTATIF'])
+  await expect(page.locator('.observations-continue-link')).toBeVisible()
 
   await page.goBack()
   await expect(page).toHaveURL(/\/experiment\/00\/part-01\/observations$/)
@@ -98,18 +99,20 @@ test('Observations preserves local answers between 1/2 and 2/2 and gates the fin
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'white')
   await expect(wordInputs.nth(0)).toHaveValue('attentive')
   await expect(wordInputs.nth(1)).toHaveValue('patient')
+  await expect(page.locator('.observations-optional')).toHaveText(['OPTIONAL', 'OPTIONAL', 'OPTIONAL'])
 
-  const words = [
-    'attentive', 'patient', 'curious', 'gentle', 'reserved',
-    'direct', 'restless', 'careful', 'distant', 'watchful',
-    'open', 'reflective', 'uncertain', 'warm', 'present',
-  ]
-  for (let index = 0; index < words.length - 1; index += 1) {
-    await wordInputs.nth(index).fill(words[index])
-  }
-  await expect(page.locator('.observations-continue-link')).toHaveCount(0)
+  const optionalStyle = await page.locator('.observations-word-question').first().evaluate(element => {
+    const question = element.querySelector('.observations-question-label')
+    const optional = element.querySelector('.observations-optional')
+    return {
+      questionSize: parseFloat(getComputedStyle(question).fontSize),
+      optionalSize: parseFloat(getComputedStyle(optional).fontSize),
+      optionalBackground: getComputedStyle(optional).backgroundColor,
+    }
+  })
+  expect(optionalStyle.optionalSize).toBeLessThan(optionalStyle.questionSize)
+  expect(optionalStyle.optionalBackground).toBe('rgba(0, 0, 0, 0)')
 
-  await wordInputs.last().fill(words.at(-1))
   const continueLink = page.getByRole('link', { name: /CONTINUE/ })
   await expect(continueLink).toBeVisible()
   await expect(continueLink).toHaveAttribute('href', '/experiment/00/part-01/reveal')

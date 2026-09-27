@@ -124,6 +124,7 @@ const translations = {
       subjects: ['SUBJECT 1', 'SUBJECT 2'],
       reason: 'WHY DO YOU THINK THAT?',
       optional: 'OPTIONAL',
+      wordOptional: 'OPTIONAL',
       chosenSubject: 'DESCRIBE THE SUBJECT YOU CHOSE IN FIVE WORDS.',
       otherSubject: 'DESCRIBE THE OTHER SUBJECT IN FIVE WORDS.',
       self: 'DESCRIBE YOURSELF IN FIVE WORDS.',
@@ -134,6 +135,7 @@ const translations = {
       question: 'ARE YOU READY FOR PART 02?',
       yes: 'YES',
       no: 'NO',
+      savedProgress: '(IF YOU CLICK NO, YOUR PROGRESS WILL BE SAVED)',
     },
     additionalParts: {
       '02': {
@@ -166,9 +168,14 @@ const translations = {
       question: 'ARE YOU READY FOR PART 03?',
       yes: 'YES',
       no: 'NO',
+      savedProgress: '(IF YOU CLICK NO, YOUR PROGRESS WILL BE SAVED)',
     },
     endPartThree: {
       title: 'END OF PART 03',
+      question: 'ARE YOU READY FOR PART 04?',
+      yes: 'YES',
+      no: 'NO',
+      savedProgress: '(IF YOU CLICK NO, YOUR PROGRESS WILL BE SAVED)',
     },
     partFour: {
       title: 'PART 04',
@@ -206,6 +213,7 @@ const translations = {
       comparisonQuestion: "WERE YOUR ANSWERS CLOSER THAN OBSERVER ZERO'S?",
       endTitle: 'END OF PART 04',
       endQuestion: 'ARE YOU READY FOR PART 05?',
+      endSavedProgress: '(IF YOU CLICK NO, YOUR PROGRESS WILL BE SAVED)',
     },
     partFive: {
       title: 'PART 05',
@@ -341,6 +349,7 @@ const translations = {
       subjects: ['SUJET 1', 'SUJET 2'],
       reason: 'POURQUOI PENSEZ-VOUS CELA ?',
       optional: 'OPTIONNEL',
+      wordOptional: 'FACULTATIF',
       chosenSubject: 'DÉCRIVEZ LE SUJET QUE VOUS AVEZ CHOISI EN CINQ MOTS.',
       otherSubject: 'DÉCRIVEZ L\'AUTRE SUJET EN CINQ MOTS.',
       self: 'DÉCRIVEZ-VOUS EN CINQ MOTS.',
@@ -351,6 +360,7 @@ const translations = {
       question: 'ÊTES-VOUS PRÊT·E POUR LA PARTIE 02 ?',
       yes: 'OUI',
       no: 'NON',
+      savedProgress: '(SI VOUS CLIQUEZ SUR NON, VOTRE PROGRESSION SERA SAUVEGARDÉE)',
     },
     additionalParts: {
       '02': {
@@ -383,9 +393,14 @@ const translations = {
       question: 'ÊTES-VOUS PRÊT·E POUR LA PARTIE 03 ?',
       yes: 'OUI',
       no: 'NON',
+      savedProgress: '(SI VOUS CLIQUEZ SUR NON, VOTRE PROGRESSION SERA SAUVEGARDÉE)',
     },
     endPartThree: {
       title: 'FIN DE LA PARTIE 03',
+      question: 'ÊTES-VOUS PRÊT·E POUR LA PARTIE 04 ?',
+      yes: 'OUI',
+      no: 'NON',
+      savedProgress: '(SI VOUS CLIQUEZ SUR NON, VOTRE PROGRESSION SERA SAUVEGARDÉE)',
     },
     partFour: {
       title: 'PARTIE 04',
@@ -423,6 +438,7 @@ const translations = {
       comparisonQuestion: 'VOS RÉPONSES ÉTAIENT-ELLES PLUS PROCHES QUE CELLES D’OBSERVER ZERO ?',
       endTitle: 'FIN DE LA PARTIE 04',
       endQuestion: 'ÊTES-VOUS PRÊT·E POUR LA PARTIE 05 ?',
+      endSavedProgress: '(SI VOUS CLIQUEZ SUR NON, VOTRE PROGRESSION SERA SAUVEGARDÉE)',
     },
     partFive: {
       title: 'PARTIE 05',
@@ -486,7 +502,7 @@ const partStructure = {
     observationsTwoStep: 'observations-03-2',
     revealStep: 'reveal-part-03',
     endStep: 'end-part-03',
-    nextPart: null,
+    nextPart: '04',
   },
 } as const
 
@@ -525,9 +541,10 @@ function getObservationsText(language: Language, partNumber: PartNumber) {
 
 function getEndText(language: Language, partNumber: PartNumber): {
   title: string
-  question?: string
-  yes?: string
-  no?: string
+  question: string
+  yes: string
+  no: string
+  savedProgress: string
 } {
   if (partNumber === '01') return translations[language].endPartOne
   if (partNumber === '02') return translations[language].endPartTwo
@@ -1468,12 +1485,14 @@ function ExperimentPartPage({
 function FiveWordInputs({
   id,
   label,
+  optionalLabel,
   placeholders,
   words,
   onChange,
 }: {
   id: string
   label: string
+  optionalLabel: string
   placeholders: readonly string[]
   words: readonly string[]
   onChange: (index: number, value: string) => void
@@ -1482,7 +1501,10 @@ function FiveWordInputs({
 
   return (
     <section className="observations-question observations-word-question" aria-labelledby={labelId}>
-      <h3 id={labelId} className="observations-question-label">{label}</h3>
+      <h3 id={labelId} className="observations-question-label">
+        {label}
+        <span className="observations-optional">{optionalLabel}</span>
+      </h3>
       <div className="observations-word-inputs">
         {placeholders.map((placeholder, index) => (
           <input
@@ -1519,14 +1541,8 @@ function ExperimentObservationsPage({
   const otherSubjectWords = observations?.otherSubjectWords ?? ['', '', '', '', '']
   const selfWords = observations?.selfWords ?? ['', '', '', '', '']
   const wordQuestionLength = partNumber === '01' ? 5 : 3
-  const wordGroups = partNumber === '01'
-    ? [chosenSubjectWords, otherSubjectWords, selfWords]
-    : [chosenSubjectWords, selfWords]
-  const allWordsComplete = wordGroups
-    .map(words => words.slice(0, wordQuestionLength))
-    .every(words => words.every(word => word.trim() !== ''))
   const firstPageComplete = selectedSubject !== '' || reason.trim() !== ''
-  const requiredAnswersComplete = step === 1 ? firstPageComplete : allWordsComplete
+  const requiredAnswersComplete = step === 1 ? firstPageComplete : true
   const continueDestination = step === 1
     ? `/experiment/00/part-${partNumber}/observations/2`
     : `/experiment/00/part-${partNumber}/reveal`
@@ -1632,6 +1648,7 @@ function ExperimentObservationsPage({
               <FiveWordInputs
                 id="chosen-subject-words"
                 label={text.chosenSubject}
+                optionalLabel={text.wordOptional}
                 placeholders={text.words.slice(0, wordQuestionLength)}
                 words={chosenSubjectWords.slice(0, wordQuestionLength)}
                 onChange={(index, value) => updateWords('chosenSubjectWords', index, value)}
@@ -1641,6 +1658,7 @@ function ExperimentObservationsPage({
                 <FiveWordInputs
                   id="other-subject-words"
                   label={text.otherSubject}
+                  optionalLabel={text.wordOptional}
                   placeholders={text.words}
                   words={otherSubjectWords}
                   onChange={(index, value) => updateWords('otherSubjectWords', index, value)}
@@ -1650,6 +1668,7 @@ function ExperimentObservationsPage({
               <FiveWordInputs
                 id="self-words"
                 label={text.self}
+                optionalLabel={text.wordOptional}
                 placeholders={text.words.slice(0, wordQuestionLength)}
                 words={selfWords.slice(0, wordQuestionLength)}
                 onChange={(index, value) => updateWords('selfWords', index, value)}
@@ -1798,6 +1817,7 @@ function ExperimentEndPage({
                 {text.no}
               </HomeLink>
             </div>
+            <p className="part-end-saved-progress">{text.savedProgress}</p>
           </>
         )}
       </section>
@@ -1806,21 +1826,12 @@ function ExperimentEndPage({
         <HomeLink
           href={`/experiment/00/part-${nextPart}`}
           className="continue-link part-end-continue-link"
-          onNavigate={() => setCurrentStep(partStructure[nextPart].mainStep)}
+          onNavigate={() => setCurrentStep(nextPart === '04' ? 'part-04' : partStructure[nextPart].mainStep)}
         >
           {translations[language].continue} <span aria-hidden="true">→</span>
         </HomeLink>
       )}
 
-      {partNumber === '03' && (
-        <HomeLink
-          href="/experiment/00/part-04"
-          className="continue-link part-end-continue-link"
-          onNavigate={() => setCurrentStep('part-04')}
-        >
-          {translations[language].continue} <span aria-hidden="true">→</span>
-        </HomeLink>
-      )}
     </main>
   )
 }
@@ -2197,6 +2208,7 @@ function ExperimentPartFourEndPage({
             {text.no}
           </HomeLink>
         </div>
+        <p className="part-end-saved-progress">{text.endSavedProgress}</p>
       </section>
 
       {ready && (

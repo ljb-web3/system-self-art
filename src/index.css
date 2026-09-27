@@ -1241,7 +1241,8 @@ a {
 
 .part-end-title,
 .part-end-question,
-.part-end-options {
+.part-end-options,
+.part-end-saved-progress {
   font-family: var(--font-mono);
   font-weight: 400;
 }
@@ -1266,6 +1267,15 @@ a {
   justify-content: center;
   gap: clamp(54px, 7vw, 100px);
   margin-top: clamp(36px, 5vh, 54px);
+}
+
+.part-end-saved-progress {
+  margin: clamp(16px, 2.5vh, 24px) auto 0;
+  font-size: clamp(9px, 0.7vw, 11px);
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  opacity: 0.58;
+  text-align: center;
 }
 
 .part-end-option {

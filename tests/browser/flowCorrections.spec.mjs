@@ -21,7 +21,7 @@ test('Welcome Continue stays conditional and appears in the bottom-right', async
 })
 
 for (const part of ['02', '03']) {
-  test(`Part ${part} observations require exactly two groups of three words`, async ({ page }) => {
+  test(`Part ${part} observations show two optional groups of three words`, async ({ page }) => {
     await page.goto(`/experiment/00/part-${part}/observations/2`)
 
     const questions = page.locator('.observations-word-question')
@@ -30,33 +30,41 @@ for (const part of ['02', '03']) {
 
     await expect(questions).toHaveCount(2)
     await expect(inputs).toHaveCount(6)
-    await expect(questions.nth(0).getByRole('heading')).toHaveText(
+    await expect(questions.nth(0).getByRole('heading')).toContainText(
       'DESCRIBE THE SUBJECT YOU CHOSE IN THREE WORDS.',
     )
-    await expect(questions.nth(1).getByRole('heading')).toHaveText(
+    await expect(questions.nth(1).getByRole('heading')).toContainText(
       'DESCRIBE YOURSELF IN THREE WORDS.',
     )
+    await expect(questions.locator('.observations-optional')).toHaveText(['OPTIONAL', 'OPTIONAL'])
     expect(await inputs.evaluateAll(elements => elements.map(element => element.placeholder))).toEqual([
       'WORD 1', 'WORD 2', 'WORD 3', 'WORD 1', 'WORD 2', 'WORD 3',
     ])
-    await expect(continueLink).toHaveCount(0)
+    await expect(continueLink).toBeVisible()
 
-    for (let index = 0; index < 5; index += 1) {
-      await inputs.nth(index).fill(`word-${index + 1}`)
-    }
-    await expect(continueLink).toHaveCount(0)
-    await inputs.nth(5).fill('word-6')
+    await inputs.nth(0).fill(`part-${part}-first`)
+    await inputs.nth(4).fill(`part-${part}-second`)
     await expect(continueLink).toBeVisible()
 
     await page.getByRole('button', { name: 'FR', exact: true }).click()
     await expect(questions).toHaveCount(2)
-    await expect(questions.locator('.observations-question-label')).toHaveText([
-      /TROIS MOTS\.$/,
-      /TROIS MOTS\.$/,
-    ])
+    await expect(questions.locator('.observations-optional')).toHaveText(['FACULTATIF', 'FACULTATIF'])
     expect(await inputs.evaluateAll(elements => elements.map(element => element.placeholder))).toEqual([
       'MOT 1', 'MOT 2', 'MOT 3', 'MOT 1', 'MOT 2', 'MOT 3',
     ])
+    await expect(inputs.nth(0)).toHaveValue(`part-${part}-first`)
+    await expect(inputs.nth(4)).toHaveValue(`part-${part}-second`)
+    await expect(continueLink).toBeVisible()
+
+    await page.getByRole('button', { name: 'BLACK', exact: true }).click()
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'black')
+    await expect(inputs.nth(0)).toHaveValue(`part-${part}-first`)
+    await expect(continueLink).toBeVisible()
+
+    await page.reload()
+    await expect(inputs.nth(0)).toHaveValue(`part-${part}-first`)
+    await expect(inputs.nth(4)).toHaveValue(`part-${part}-second`)
+    await expect(continueLink).toBeVisible()
   })
 }
 
@@ -119,6 +127,8 @@ test('Part 03 End continues to Part 04 and Part 04 can scroll to unobstructed co
   await page.goto('/experiment/00/part-03/end')
 
   const partThreeContinue = page.locator('.part-end-continue-link')
+  await expect(partThreeContinue).toHaveCount(0)
+  await page.getByRole('button', { name: 'YES', exact: true }).click()
   await expect(partThreeContinue).toHaveAttribute('href', '/experiment/00/part-04')
   await partThreeContinue.click()
   await expect(page).toHaveURL(/\/experiment\/00\/part-04$/)

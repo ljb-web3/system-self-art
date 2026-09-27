@@ -13,9 +13,14 @@ function isUuid(value: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
 }
 
-export function getOrCreateExperiment00ParticipantId() {
+export function getStoredExperiment00ParticipantId() {
   const storedParticipantId = window.localStorage.getItem(experiment00ParticipantIdStorageKey)
-  if (storedParticipantId && isUuid(storedParticipantId)) return storedParticipantId
+  return storedParticipantId && isUuid(storedParticipantId) ? storedParticipantId : null
+}
+
+export function getOrCreateExperiment00ParticipantId() {
+  const storedParticipantId = getStoredExperiment00ParticipantId()
+  if (storedParticipantId) return storedParticipantId
 
   const participantId = window.crypto.randomUUID()
   window.localStorage.setItem(experiment00ParticipantIdStorageKey, participantId)
@@ -63,4 +68,3 @@ export function getOrCreateExperiment00Participant(participantId: string) {
   participantRequestCache.set(participantId, request)
   return request
 }
-

@@ -84,7 +84,12 @@ test('Part 03 exposes every route and continues to Part 04', async ({ page }) =>
   await continueLink.click()
 
   await expect(page.getByRole('heading', { name: 'END OF PART 03' })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'YES', exact: true })).toHaveCount(0)
+  await expect(page.getByText('ARE YOU READY FOR PART 04?', { exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'YES', exact: true })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'NO', exact: true })).toBeVisible()
+  await expect(page.getByText('(IF YOU CLICK NO, YOUR PROGRESS WILL BE SAVED)', { exact: true })).toBeVisible()
+  await expect(page.getByRole('link', { name: /CONTINUE/ })).toHaveCount(0)
+  await page.getByRole('button', { name: 'YES', exact: true }).click()
   await expect(page.getByRole('link', { name: /CONTINUE/ }))
     .toHaveAttribute('href', '/experiment/00/part-04')
   expect(await page.evaluate(key => JSON.parse(localStorage.getItem(key)).currentStep, storageKey))
@@ -137,4 +142,68 @@ test('Part 02 End NO preserves its checkpoint and returns home', async ({ page }
 
   await page.getByRole('link', { name: 'EXPERIMENT 00', exact: true }).click()
   await expect(page).toHaveURL(/\/experiment\/00\/part-02\/end$/)
+})
+
+test('every End of Part page shows the localized saved-progress note', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+
+  for (const part of ['01', '02', '03', '04']) {
+    await page.goto(`/experiment/00/part-${part}/end`)
+
+    const note = page.getByText('(IF YOU CLICK NO, YOUR PROGRESS WILL BE SAVED)', { exact: true })
+    await expect(note).toBeVisible()
+
+    const layout = await page.locator('.part-end-content').evaluate(element => {
+      const noteElement = element.querySelector('.part-end-saved-progress')
+      const questionElement = element.querySelector('.part-end-question')
+      const optionElement = element.querySelector('.part-end-option')
+      const noteBounds = noteElement.getBoundingClientRect()
+      const contentBounds = element.getBoundingClientRect()
+      return {
+        noteCenter: noteBounds.left + noteBounds.width / 2,
+        contentCenter: contentBounds.left + contentBounds.width / 2,
+        noteFontSize: parseFloat(getComputedStyle(noteElement).fontSize),
+        questionFontSize: parseFloat(getComputedStyle(questionElement).fontSize),
+        optionFontSize: parseFloat(getComputedStyle(optionElement).fontSize),
+        noteOpacity: parseFloat(getComputedStyle(noteElement).opacity),
+        noteBackground: getComputedStyle(noteElement).backgroundColor,
+      }
+    })
+
+    expect(layout.noteCenter).toBeCloseTo(layout.contentCenter, 0)
+    expect(layout.noteFontSize).toBeLessThan(layout.questionFontSize)
+    expect(layout.noteFontSize).toBeLessThan(layout.optionFontSize)
+    expect(layout.noteOpacity).toBeLessThan(1)
+    expect(layout.noteBackground).toBe('rgba(0, 0, 0, 0)')
+  }
+
+  await page.goto('/experiment/00/part-03/end')
+  await page.getByRole('button', { name: 'YES', exact: true }).click()
+  await expect(page.getByRole('link', { name: /CONTINUE/ })).toBeVisible()
+
+  await page.getByRole('button', { name: 'FR', exact: true }).click()
+  await expect(page.getByText('ÊTES-VOUS PRÊT·E POUR LA PARTIE 04 ?', { exact: true })).toBeVisible()
+  await expect(page.getByText('(SI VOUS CLIQUEZ SUR NON, VOTRE PROGRESSION SERA SAUVEGARDÉE)', { exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'OUI', exact: true })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('link', { name: /CONTINUER/ })).toBeVisible()
+
+  await page.getByRole('button', { name: 'BLACK', exact: true }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'black')
+  await expect(page.getByRole('button', { name: 'OUI', exact: true })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('link', { name: /CONTINUER/ })).toHaveAttribute('href', '/experiment/00/part-04')
+
+  await page.getByRole('button', { name: 'WHITE', exact: true }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'white')
+  await expect(page.getByRole('link', { name: /CONTINUER/ })).toBeVisible()
+  await page.getByRole('link', { name: /CONTINUER/ }).click()
+  await expect(page).toHaveURL(/\/experiment\/00\/part-04$/)
+})
+
+test('Part 03 End NO preserves its checkpoint and returns home', async ({ page }) => {
+  await page.goto('/experiment/00/part-03/end')
+  await page.getByRole('link', { name: 'NO', exact: true }).click()
+
+  await expect(page).toHaveURL(/\/$/)
+  expect(await page.evaluate(key => JSON.parse(localStorage.getItem(key)).currentStep, storageKey))
+    .toBe('end-part-03')
 })

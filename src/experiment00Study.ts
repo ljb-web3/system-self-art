@@ -57,8 +57,9 @@ export type PartFiveState = {
 }
 
 export type Experiment00StudyState = {
-  version: 1
+  version: 2
   participantId: string
+  updatedAt: string
   currentStep: Experiment00Step | null
   welcome: {
     age: string
