@@ -8,7 +8,7 @@ test('Part 04 follows its Observer Zero flow and persists every answer', async (
 
   await expect(page.getByRole('heading', { name: 'PART 04' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'OBSERVE... THE OBSERVER??' })).toBeVisible()
-  await expect(page.getByText('Observer Zero was physically present during the experiment', { exact: false })).toBeVisible()
+  await expect(page.getByText('The conditions have changed this time.', { exact: false })).toBeVisible()
   await expect(page.locator('.video-placeholder')).toHaveCount(1)
   await expect(page.locator('.rating-options')).toHaveCount(0)
   await expect(page.locator('.timestamps')).toHaveCount(0)

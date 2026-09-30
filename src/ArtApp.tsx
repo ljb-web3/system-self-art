@@ -8,6 +8,7 @@ import {
   useExperiment00ParticipantIdentity,
 } from './experiment00ParticipantIdentity'
 import { Experiment00ParticipantIdentityProvider } from './Experiment00ParticipantIdentityProvider'
+import { experiment00PdfCopy } from './experiment00PdfCopy'
 
 type HomeRoute = { kind: 'home' }
 type ExperimentRoute = { kind: 'experiment'; series: string; part: string | null }
@@ -79,13 +80,13 @@ const translations = {
       title: 'PART 01',
       revealTitle: 'PART 01 : REVEAL',
       observationTitle: 'OBSERVE THE PARTICIPANTS',
-      observationCopy: 'Observe how the participants respond to each other, including their movements, pauses and changes in behavior. Watch the video before continuing. You can use the timestamps below the video to skip directly to different moments in the session. Once you have watched the recording, click WATCHED THE VIDEO?',
+      observationCopy: experiment00PdfCopy.en.part01,
       timestamps: 'TIMESTAMPS',
       watched: 'WATCHED THE VIDEO?',
       yes: 'YES',
       no: 'NO',
       subjects: [
-        { label: 'SUBJECT 1', question: 'HOW CONNECTED DOES SUBJECT 1 FEEL?' },
+        { label: 'SUBJECT 1', question: 'HOW CONNECTED TO SUBJECT 2 DOES SUBJECT 1 FEEL?' },
         { label: 'SUBJECT 2', question: 'HOW CONNECTED DOES SUBJECT 2 FEEL?' },
       ],
       video: 'PARTICIPANT RECORDING',
@@ -120,7 +121,7 @@ const translations = {
     observations: {
       title: 'OBSERVATIONS',
       introduction: 'Before continuing, record your impressions of the participants. There are no correct or incorrect answers. We are interested in how you perceived them and how you perceive yourself.',
-      connection: 'WHICH SUBJECT DO YOU THINK YOU WOULD CONNECT WITH MORE?',
+      connection: 'WHICH SUBJECT DO YOU THINK YOU WOULD CONNECT (OR LIKE) MORE?',
       subjects: ['SUBJECT 1', 'SUBJECT 2'],
       reason: 'WHY DO YOU THINK THAT?',
       optional: 'OPTIONAL',
@@ -142,11 +143,11 @@ const translations = {
         title: 'PART 02',
         revealTitle: 'PART 02 : REVEAL',
         video: 'PART 02 VIDEO PLACEHOLDER',
-        observationCopy: 'Part 02 observation instructions will be added here. Watch the video before continuing.',
+        observationCopy: experiment00PdfCopy.en.part02,
         annotation: 'Part 02 timestamp annotation placeholder.',
-        observationsIntroduction: 'Part 02 observation questions will be added here. Record your impressions before continuing.',
-        observationsConnection: 'PART 02 QUESTION 1',
-        observationsReason: 'PART 02 QUESTION 2',
+        observationsIntroduction: 'Record your impressions before continuing.',
+        observationsConnection: 'WHICH SUBJECT DO YOU THINK YOU WOULD CONNECT WITH (OR LIKE) MORE?',
+        observationsReason: 'WHY DO YOU THINK THAT?',
         chosenSubject: 'DESCRIBE THE SUBJECT YOU CHOSE IN THREE WORDS.',
         self: 'DESCRIBE YOURSELF IN THREE WORDS.',
       },
@@ -154,9 +155,9 @@ const translations = {
         title: 'PART 03',
         revealTitle: 'PART 03 : REVEAL',
         video: 'PART 03 VIDEO PLACEHOLDER',
-        observationCopy: 'Part 03 observation instructions will be added here. Watch the video before continuing.',
+        observationCopy: experiment00PdfCopy.en.part03,
         annotation: 'Part 03 timestamp annotation placeholder.',
-        observationsIntroduction: 'Part 03 observation questions will be added here. Record your impressions before continuing.',
+        observationsIntroduction: 'Record your impressions before continuing.',
         observationsConnection: 'PART 03 QUESTION 1',
         observationsReason: 'PART 03 QUESTION 2',
         chosenSubject: 'DESCRIBE THE SUBJECT YOU CHOSE IN THREE WORDS.',
@@ -181,18 +182,12 @@ const translations = {
       title: 'PART 04',
       video: 'PART 04 VIDEO PLACEHOLDER',
       observerTitle: 'OBSERVE... THE OBSERVER??',
-      observerIntroduction: [
-        'Observer Zero was physically present during the experiment, but she was asked to face the wall and observe what was happening between Subject 1 and Subject 2 without seeing them. She had to estimate how connected each participant felt and show her guesses using numbered cards.',
-        'She was present in the room, but deprived of visual information.',
-        'You are in the opposite position. You can see the participants through a screen, but you are not physically present with them.',
-        'Observer Zero had to sense what was happening without seeing it. You are being asked to sense what is happening while seeing it through an interface.',
-        'While watching, simply form a rough mental estimate of the numbers you think Subject 1 and Subject 2 will report.',
-      ],
+      observerIntroduction: experiment00PdfCopy.en.part04,
       watched: 'WATCHED THE VIDEO?',
       yes: 'YES',
       no: 'NO',
       observationsTitle: 'OBSERVATIONS',
-      observationsIntroduction: 'Record your impressions before seeing the reveal.',
+      observationsIntroduction: 'Answer the questions below before seeing the reveal.',
       observationQuestions: [
         {
           question: 'WHICH SUBJECT DO YOU THINK OBSERVER ZERO WOULD CONNECT WITH MORE IF SHE WERE A PARTICIPANT?',
@@ -218,16 +213,9 @@ const translations = {
     partFive: {
       title: 'PART 05',
       video: 'PART 05 VIDEO PLACEHOLDER',
-      observerTitle: 'OBSERVE... ME??',
-      observerIntroduction: [
-        'I created this experiment and this website. I designed the conditions in which the participants were observed and built the system through which you have been observing them.',
-        'Until now, I occupied the apparent position of the experimenter: watching, designing, recording and organizing the conditions of observation.',
-        'But an observer is never outside the system.',
-        'So now the person who created the system becomes one of its subjects.',
-        'It is time for me to be observed.',
-        'The loop closes.',
-      ],
-      connectionQuestion: 'HOW CONNECTED DO YOU FEEL TO ME AFTER WATCHING THE VIDEO?',
+      observerTitle: experiment00PdfCopy.en.part05.title,
+      observerIntroduction: experiment00PdfCopy.en.part05.paragraphs,
+      connectionQuestion: experiment00PdfCopy.en.part05.question,
     },
     finalPage: {
       title: 'END',
@@ -235,14 +223,8 @@ const translations = {
       identityError: 'IDENTITY UNAVAILABLE',
       retry: 'RETRY',
     },
-    introduction: [
-      'People were asked to communicate, share information and connect without speaking or touching each other.',
-      'We already connect through increasingly limited interfaces. On social media, sensory information disappears. We form relationships through screens, fall in love through text, interact with usernames, images and avatars, sometimes without ever seeing the person behind them.',
-      'Yet words remain. Semantic information seems to be one of the last things we remove from communication.',
-      'So what happens when words disappear too? When faces are partially hidden, eye contact is prevented, touch is forbidden and speech is removed?',
-      'What information can still pass from one person to another?',
-      'And what can happen between two people besides discomfort, confusion and boredom?',
-    ],
+    introduction: experiment00PdfCopy.en.introduction,
+    explanations: experiment00PdfCopy.en.explanations,
   },
   fr: {
     questions: {
@@ -304,14 +286,14 @@ const translations = {
       title: 'PARTIE 01',
       revealTitle: 'PARTIE 01 : RÉSULTATS',
       observationTitle: 'OBSERVER LES PARTICIPANTS',
-      observationCopy: 'Observez comment les participants réagissent l\'un à l\'autre, notamment leurs mouvements, leurs pauses et les changements dans leur comportement. Regardez la vidéo avant de continuer. Vous pouvez utiliser les timestamps sous la vidéo pour accéder directement à différents moments de la session. Une fois la vidéo visionnée, cliquez sur VIDÉO DÉJÀ VISIONNÉE ?',
+      observationCopy: experiment00PdfCopy.fr.part01,
       timestamps: 'TIMESTAMPS',
       watched: 'VIDÉO DÉJÀ VISIONNÉE ?',
       yes: 'OUI',
       no: 'NON',
       subjects: [
-        { label: 'SUJET 1', question: 'À QUEL POINT LE SUJET 1 SE SENT-IL CONNECTÉ ?' },
-        { label: 'SUJET 2', question: 'À QUEL POINT LE SUJET 2 SE SENT-IL CONNECTÉ ?' },
+        { label: 'SUJET 1', question: 'EVALUEZ QUEL POINT LE SUJET 1 SE SENT-IL CONNECTÉ AU SUJET 2' },
+        { label: 'SUJET 2', question: 'EVALUEZ POINT LE SUJET 2 SE SENT-IL CONNECTÉ AU SUJET 1' },
       ],
       video: 'ENREGISTREMENT DES PARTICIPANTS',
       closeTerminal: 'FERMER LE RELEVÉ DU TIMESTAMP',
@@ -344,10 +326,10 @@ const translations = {
     },
     observations: {
       title: 'OBSERVATIONS',
-      introduction: 'Avant de continuer, notez vos impressions sur les participants. Il n\'y a pas de bonne ou de mauvaise réponse. Nous nous intéressons à la manière dont vous les avez perçus et à la manière dont vous vous percevez vous-même.',
-      connection: 'AVEC QUEL SUJET PENSEZ-VOUS QUE VOUS AURIEZ LE PLUS DE CONNEXION ?',
+      introduction: 'Avant de continuer, notez vos impressions sur les participants. Il n\'y a pas de bonne ou de mauvaise réponse.',
+      connection: 'AVEC QUEL SUJET PENSEZ-VOUS QUE VOUS CONNECTERIEZ LE PLUS?',
       subjects: ['SUJET 1', 'SUJET 2'],
-      reason: 'POURQUOI PENSEZ-VOUS CELA ?',
+      reason: 'EXPLIQUEZ VOTRE REPONSE',
       optional: 'OPTIONNEL',
       wordOptional: 'FACULTATIF',
       chosenSubject: 'DÉCRIVEZ LE SUJET QUE VOUS AVEZ CHOISI EN CINQ MOTS.',
@@ -367,11 +349,11 @@ const translations = {
         title: 'PARTIE 02',
         revealTitle: 'PARTIE 02 : RÉSULTATS',
         video: 'EMPLACEMENT VIDÉO PARTIE 02',
-        observationCopy: 'Les instructions d’observation de la partie 02 seront ajoutées ici. Regardez la vidéo avant de continuer.',
+        observationCopy: experiment00PdfCopy.fr.part02,
         annotation: 'Emplacement réservé pour une annotation de la partie 02.',
-        observationsIntroduction: 'Les questions d’observation de la partie 02 seront ajoutées ici. Notez vos impressions avant de continuer.',
-        observationsConnection: 'QUESTION 1 DE LA PARTIE 02',
-        observationsReason: 'QUESTION 2 DE LA PARTIE 02',
+        observationsIntroduction: 'Notez vos impressions avant de continuer. Il n\'y a pas de bonne ou de mauvaise réponse.',
+        observationsConnection: 'AVEC QUEL SUJET PENSEZ-VOUS QUE VOUS CONNECTERIEZ LE PLUS?',
+        observationsReason: 'EXPLIQUEZ VOTRE REPONSE',
         chosenSubject: 'DÉCRIVEZ LE SUJET QUE VOUS AVEZ CHOISI EN TROIS MOTS.',
         self: 'DÉCRIVEZ-VOUS EN TROIS MOTS.',
       },
@@ -379,11 +361,11 @@ const translations = {
         title: 'PARTIE 03',
         revealTitle: 'PARTIE 03 : RÉSULTATS',
         video: 'EMPLACEMENT VIDÉO PARTIE 03',
-        observationCopy: 'Les instructions d’observation de la partie 03 seront ajoutées ici. Regardez la vidéo avant de continuer.',
+        observationCopy: experiment00PdfCopy.fr.part03,
         annotation: 'Emplacement réservé pour une annotation de la partie 03.',
-        observationsIntroduction: 'Les questions d’observation de la partie 03 seront ajoutées ici. Notez vos impressions avant de continuer.',
-        observationsConnection: 'QUESTION 1 DE LA PARTIE 03',
-        observationsReason: 'QUESTION 2 DE LA PARTIE 03',
+        observationsIntroduction: 'Notez vos impressions sur les participants avant de continuer. Il n\'y a pas de bonne ou de mauvaise réponse.',
+        observationsConnection: 'AVEC QUEL SUJET PENSEZ-VOUS QUE VOUS CONNECTERIEZ LE PLUS?',
+        observationsReason: 'EXPLIQUEZ VOTRE REPONSE',
         chosenSubject: 'DÉCRIVEZ LE SUJET QUE VOUS AVEZ CHOISI EN TROIS MOTS.',
         self: 'DÉCRIVEZ-VOUS EN TROIS MOTS.',
       },
@@ -406,18 +388,12 @@ const translations = {
       title: 'PARTIE 04',
       video: 'EMPLACEMENT VIDÉO PARTIE 04',
       observerTitle: 'OBSERVEZ... L’OBSERVATRICE ??',
-      observerIntroduction: [
-        'Observer Zero était physiquement présente pendant l’expérience, mais il lui a été demandé de faire face au mur et d’observer ce qui se passait entre le Sujet 1 et le Sujet 2 sans pouvoir les voir. Elle devait estimer à quel point chacun des participants se sentait connecté et montrer ses estimations à l’aide de cartes numérotées.',
-        'Elle était présente dans la pièce, mais privée d’information visuelle.',
-        'Vous êtes dans la situation inverse. Vous pouvez voir les participants à travers un écran, mais vous n’êtes pas physiquement présent·e avec eux.',
-        'Observer Zero devait ressentir ce qui se passait sans le voir. Il vous est demandé de ressentir ce qui se passe tout en le regardant à travers une interface.',
-        'Pendant la vidéo, formez simplement une estimation approximative des nombres que, selon vous, le Sujet 1 et le Sujet 2 vont indiquer.',
-      ],
+      observerIntroduction: experiment00PdfCopy.fr.part04,
       watched: 'VIDÉO DÉJÀ VISIONNÉE ?',
       yes: 'OUI',
       no: 'NON',
       observationsTitle: 'OBSERVATIONS',
-      observationsIntroduction: 'Notez vos impressions avant de voir les résultats.',
+      observationsIntroduction: 'Répondez aux questions ci-dessous pour voir les résultats.',
       observationQuestions: [
         {
           question: 'AVEC QUEL SUJET PENSEZ-VOUS QU’OBSERVER ZERO AURAIT LE PLUS DE CONNEXION SI ELLE ÉTAIT PARTICIPANTE ?',
@@ -443,16 +419,9 @@ const translations = {
     partFive: {
       title: 'PARTIE 05',
       video: 'EMPLACEMENT VIDÉO PARTIE 05',
-      observerTitle: 'OBSERVEZ... MOI ??',
-      observerIntroduction: [
-        'J’ai créé cette expérience et ce site. J’ai conçu les conditions dans lesquelles les participants ont été observés et construit le système à travers lequel vous les avez observés.',
-        'Jusqu’à présent, j’occupais la position apparente de l’expérimentatrice : observer, concevoir, enregistrer et organiser les conditions de l’observation.',
-        'Mais un observateur n’est jamais extérieur au système.',
-        'La personne qui a créé le système devient donc maintenant l’un de ses sujets.',
-        'C’est à mon tour d’être observée.',
-        'La boucle se referme.',
-      ],
-      connectionQuestion: 'À QUEL POINT VOUS SENTEZ-VOUS CONNECTÉ·E À MOI APRÈS AVOIR REGARDÉ LA VIDÉO ?',
+      observerTitle: experiment00PdfCopy.fr.part05.title,
+      observerIntroduction: experiment00PdfCopy.fr.part05.paragraphs,
+      connectionQuestion: experiment00PdfCopy.fr.part05.question,
     },
     finalPage: {
       title: 'FIN',
@@ -460,14 +429,8 @@ const translations = {
       identityError: 'IDENTITÉ INDISPONIBLE',
       retry: 'RÉESSAYER',
     },
-    introduction: [
-      'Des personnes ont été invitées à communiquer, à partager de l\'information et à créer une connexion sans parler ni se toucher.',
-      'Nous nous connectons déjà à travers des interfaces de plus en plus limitées. Sur les réseaux sociaux, une partie de l\'information sensorielle disparaît. Nous créons des relations à travers des écrans, tombons amoureux par le texte, interagissons avec des pseudonymes, des images et des avatars, parfois sans jamais voir la personne qui se trouve derrière.',
-      'Pourtant, les mots restent. L\'information sémantique semble être l\'une des dernières choses que nous retirons de la communication.',
-      'Alors, que se passe-t-il lorsque les mots disparaissent eux aussi ? Lorsque les visages sont partiellement cachés, que le contact visuel est empêché, que le toucher est interdit et que la parole est supprimée ?',
-      'Quelle information peut encore circuler d\'une personne à l\'autre ?',
-      'Et que peut-il se passer entre deux personnes, au-delà de l\'inconfort, de la confusion et de l\'ennui ?',
-    ],
+    introduction: experiment00PdfCopy.fr.introduction,
+    explanations: experiment00PdfCopy.fr.explanations,
   },
 } as const
 
@@ -553,7 +516,7 @@ function getEndText(language: Language, partNumber: PartNumber): {
 
 function readRoute(pathname = window.location.pathname): Route {
   const path = pathname.replace(/\/+$/, '') || '/'
-  const match = path.match(/^\/experiment\/(\d{2})(?:\/(welcome|end|part-\d{2}(?:(?:\/observations(?:\/2)?)|\/reveal|\/comparison|\/end)?))?$/)
+  const match = path.match(/^\/experiment\/(\d{2})(?:\/(explanations|welcome|end|part-\d{2}(?:(?:\/observations(?:\/2)?)|\/reveal|\/comparison|\/end)?))?$/)
 
   if (match) {
     return { kind: 'experiment', series: match[1], part: match[2] ?? null }
@@ -702,7 +665,8 @@ function HomeLink({
 }
 
 const previousStudyRoutes: Record<string, string> = {
-  welcome: '/experiment/00',
+  explanations: '/experiment/00',
+  welcome: '/experiment/00/explanations',
   'part-01': '/experiment/00/welcome',
   'part-01/observations': '/experiment/00/part-01',
   'part-01/observations/2': '/experiment/00/part-01/observations',
@@ -885,7 +849,7 @@ function ExperimentIntroductionPage({
   const { setCurrentStep } = useExperiment00Study()
   const text = translations[language]
   const [introductionState, setIntroductionState] = useState<'closed' | 'typing' | 'complete'>('closed')
-  const introductionText = text.introduction.join(' ')
+  const introductionText = text.introduction.join('\n\n')
   const introductionOpen = introductionState !== 'closed'
 
   return (
@@ -930,13 +894,53 @@ function ExperimentIntroductionPage({
 
       {introductionState === 'complete' && (
         <HomeLink
-          href="/experiment/00/welcome"
+          href="/experiment/00/explanations"
           className="continue-link"
-          onNavigate={() => setCurrentStep('welcome')}
+          onNavigate={() => setCurrentStep('explanations')}
         >
           {text.continue} <span aria-hidden="true">→</span>
         </HomeLink>
       )}
+    </main>
+  )
+}
+
+function ExperimentExplanationsPage({
+  language,
+  theme,
+  onLanguageChange,
+  onThemeChange,
+}: Omit<ExperimentPageProps, 'kind' | 'series' | 'part'>) {
+  const { setCurrentStep } = useExperiment00Study()
+  const text = translations[language].explanations
+
+  return (
+    <main className={`experiment-explanations-page theme-${theme}`}>
+      <h1 className="identity" aria-label="System Self">
+        <span>SYSTEM</span>
+        <span>SELF</span>
+      </h1>
+
+      <InterfaceControls
+        language={language}
+        theme={theme}
+        onLanguageChange={onLanguageChange}
+        onThemeChange={onThemeChange}
+      />
+
+      <section className="experiment-explanations">
+        <h2 className="experiment-introduction-title">{text.title}</h2>
+        <div className="explanations-copy">
+          {text.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+        <HomeLink
+          href="/experiment/00/welcome"
+          className="continue-link explanations-continue-link"
+          onNavigate={() => setCurrentStep('welcome')}
+        >
+          {translations[language].continue} <span aria-hidden="true">→</span>
+        </HomeLink>
+      </section>
     </main>
   )
 }
@@ -1295,7 +1299,7 @@ function ExperimentPartPage({
   }
 
   return (
-    <main className={`experiment-part-page theme-${theme}${activeAnnotation ? ' has-terminal-open' : ''}`}>
+    <main className={`experiment-part-page experiment-main-part-page theme-${theme}${activeAnnotation ? ' has-terminal-open' : ''}`}>
       <h1 className="identity" aria-label="System Self">
         <span>SYSTEM</span>
         <span>SELF</span>
@@ -1340,6 +1344,7 @@ function ExperimentPartPage({
         </section>
 
         <section className="observation-introduction" aria-live="polite">
+          <div className="part-main-content">
           {view.startsWith('subject') ? (
             <div className="subject-interface">
               <div className="subject-block">
@@ -1411,7 +1416,9 @@ function ExperimentPartPage({
           ) : (
             <>
               <h3>{text.observationTitle}</h3>
-              <p>{text.observationCopy}</p>
+               <div className="part-observation-copy">
+                 {text.observationCopy.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+               </div>
               <button
                 type="button"
                 className="watched-prompt"
@@ -1434,18 +1441,18 @@ function ExperimentPartPage({
               )}
             </>
           )}
+          </div>
+          {ratingsComplete && (
+            <HomeLink
+              href={`/experiment/00/part-${partNumber}/observations`}
+              className="continue-link part-continue-link content-relative-continue"
+              onNavigate={() => setCurrentStep(structure.observationsOneStep)}
+            >
+              {translations[language].continue} <span aria-hidden="true">→</span>
+            </HomeLink>
+          )}
         </section>
       </div>
-
-      {ratingsComplete && (
-        <HomeLink
-          href={`/experiment/00/part-${partNumber}/observations`}
-          className="continue-link part-continue-link"
-          onNavigate={() => setCurrentStep(structure.observationsOneStep)}
-        >
-          {translations[language].continue} <span aria-hidden="true">→</span>
-        </HomeLink>
-      )}
 
       {activeAnnotation && (
         <div className="timestamp-terminal-layer" role="presentation">
@@ -1860,7 +1867,7 @@ function ExperimentPartFourPage({
   }
 
   return (
-    <main className={`experiment-part-page experiment-part-four-page theme-${theme}`}>
+    <main className={`experiment-part-page experiment-main-part-page experiment-part-four-page theme-${theme}`}>
       <h1 className="identity" aria-label="System Self">
         <HomeLink href="/" className="identity-home-link">
           <span>SYSTEM</span>
@@ -1885,6 +1892,7 @@ function ExperimentPartFourPage({
         </section>
 
         <section className="observation-introduction part-four-introduction">
+          <div className="part-main-content">
           <h3>{text.observerTitle}</h3>
           <div className="part-four-observer-copy">
             {text.observerIntroduction.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
@@ -1914,6 +1922,7 @@ function ExperimentPartFourPage({
               ))}
             </div>
           )}
+          </div>
 
           {watchedVideo === 'yes' && (
             <HomeLink
@@ -2248,7 +2257,7 @@ function ExperimentPartFivePage({
   }
 
   return (
-    <main className={`experiment-part-page experiment-part-five-page theme-${theme}`}>
+    <main className={`experiment-part-page experiment-main-part-page experiment-part-five-page theme-${theme}`}>
       <h1 className="identity" aria-label="System Self">
         <HomeLink href="/" className="identity-home-link">
           <span>SYSTEM</span>
@@ -2273,6 +2282,7 @@ function ExperimentPartFivePage({
         </section>
 
         <section className="observation-introduction part-five-introduction">
+          <div className="part-main-content">
           <h3>{text.observerTitle}</h3>
           <div className="part-five-observer-copy">
             {text.observerIntroduction.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
@@ -2294,6 +2304,7 @@ function ExperimentPartFivePage({
                 </button>
               ))}
             </div>
+          </div>
           </div>
 
           {connectionRating !== null && (
@@ -2365,6 +2376,8 @@ function ExperimentPageContent(props: ExperimentPageProps) {
   const text = translations[language]
 
   if (series === '00' && part === null) return <ExperimentIntroductionPage {...props} />
+
+  if (series === '00' && part === 'explanations') return <ExperimentExplanationsPage {...props} />
 
   if (series === '00' && part === 'welcome') return <ExperimentWelcomePage {...props} />
 

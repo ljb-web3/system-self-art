@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react'
 
 export type Experiment00Step =
+  | 'explanations'
   | 'welcome'
   | 'part-01'
   | 'observations-01-1'
@@ -90,6 +91,8 @@ export const Experiment00StudyContext = createContext<Experiment00StudyContextVa
 
 export function routeForExperiment00Step(step: Experiment00Step | null | undefined) {
   switch (step) {
+    case 'explanations':
+      return '/experiment/00/explanations'
     case 'welcome':
       return '/experiment/00/welcome'
     case 'part-01':

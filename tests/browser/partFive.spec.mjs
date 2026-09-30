@@ -16,12 +16,11 @@ test('Part 04 End flows into the persistent Part 05 rating and final subject ack
 
   await expect(page).toHaveURL(/\/experiment\/00\/part-05$/)
   await expect(page.getByRole('heading', { name: 'PART 05' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'OBSERVE... ME??' })).toBeVisible()
-  await expect(page.getByText('I created this experiment and this website.', { exact: false })).toBeVisible()
-  await expect(page.getByText('The loop closes.', { exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'OBSERVE THE OBSERVER' })).toBeVisible()
+  await expect(page.getByText('I have been behind the camera.', { exact: false })).toBeVisible()
   await expect(page.locator('.part-five-composition .video-placeholder')).toHaveCount(1)
 
-  const question = 'HOW CONNECTED DO YOU FEEL TO ME AFTER WATCHING THE VIDEO?'
+  const question = 'Based only on the information available to you, would you want to connect further with me?'
   const scale = page.locator('.part-five-rating .rating-option')
   await expect(page.getByText(question, { exact: true })).toBeVisible()
   await expect(scale).toHaveCount(10)
@@ -43,8 +42,8 @@ test('Part 04 End flows into the persistent Part 05 rating and final subject ack
   await expect(scale.filter({ hasText: /^3$/ })).toHaveAttribute('aria-pressed', 'true')
   await page.getByRole('button', { name: 'FR', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'PARTIE 05' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'OBSERVEZ... MOI ??' })).toBeVisible()
-  await expect(page.getByText(/CONNECTÉ·E À MOI/)).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'OBSERVE THE OBSERVER' })).toBeVisible()
+  await expect(page.getByText(/avez-vous envie de “connecter” davantager avec moi/)).toBeVisible()
   await page.getByRole('button', { name: 'BLACK', exact: true }).click()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'black')
 

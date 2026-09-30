@@ -13,6 +13,8 @@ test('Experiment 00 persists identity, answers, checkpoints, and resumes after P
   await page.getByRole('link', { name: 'EXPERIMENT 00', exact: true }).click()
   await page.getByRole('button', { name: 'EXPERIMENT 00', exact: true }).click()
   await page.getByRole('link', { name: /CONTINUE/ }).click()
+  await expect(page).toHaveURL(/\/experiment\/00\/explanations$/)
+  await page.getByRole('link', { name: /CONTINUE/ }).click()
 
   const subjectIdentity = page.getByText(/YOU ARE SUBJECT \d+/)
   await expect(subjectIdentity).toBeVisible()

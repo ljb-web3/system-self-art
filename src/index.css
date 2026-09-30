@@ -319,6 +319,47 @@ a {
   letter-spacing: 0.035em;
   line-height: 1.5;
   text-align: center;
+  white-space: pre-line;
+}
+
+.experiment-explanations-page {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 100dvh;
+  padding: clamp(170px, 21vh, 230px) 6vw 110px;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.experiment-explanations {
+  width: min(100%, 1100px);
+  text-align: center;
+}
+
+.explanations-copy {
+  width: min(100%, 96ch);
+  margin: clamp(28px, 4vh, 42px) auto 0;
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 0.95vw, 15px);
+  letter-spacing: 0.035em;
+  line-height: 1.65;
+}
+
+.explanations-copy p {
+  margin: 0;
+}
+
+.explanations-copy p + p {
+  margin-top: 1.35em;
+}
+
+.explanations-continue-link {
+  position: static;
+  display: block;
+  width: max-content;
+  margin: clamp(48px, 8vh, 80px) 0 0 auto;
 }
 
 .continue-link {
@@ -561,6 +602,31 @@ a {
   overflow: hidden;
   color: var(--foreground);
   background: var(--background);
+}
+
+.experiment-part-page.experiment-main-part-page {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-height: 100dvh;
+  padding-bottom: 38px;
+  overflow: visible;
+}
+
+.experiment-main-part-page .part-composition {
+  position: relative;
+  top: auto;
+  right: auto;
+  left: auto;
+  flex: 1;
+  align-items: stretch;
+  margin: clamp(245px, 30vh, 315px) 3.2vw 0;
+}
+
+.experiment-main-part-page .observation-introduction {
+  display: flex;
+  flex-direction: column;
+  gap: 112px;
 }
 
 .experiment-part-page.theme-black {
@@ -892,15 +958,9 @@ a {
   opacity: 0.58;
 }
 
-.part-four-introduction h3 {
+.experiment-main-part-page .part-four-introduction h3 {
   font-size: clamp(28px, 2.2vw, 40px);
-}
-
-.experiment-part-page.experiment-part-four-page {
-  height: auto;
-  min-height: max(100dvh, 1080px);
-  padding-bottom: 140px;
-  overflow: visible;
+  white-space: normal;
 }
 
 .part-four-observer-copy {
@@ -928,13 +988,6 @@ a {
 
 .part-five-introduction h3 {
   font-size: clamp(28px, 2.2vw, 40px);
-}
-
-.experiment-part-page.experiment-part-five-page {
-  height: auto;
-  min-height: max(100dvh, 980px);
-  padding-bottom: 140px;
-  overflow: visible;
 }
 
 .part-five-observer-copy {
@@ -980,6 +1033,26 @@ a {
   margin: 112px calc(0px - var(--observation-horizontal-offset)) 0 auto;
 }
 
+.experiment-main-part-page .content-relative-continue {
+  margin-top: auto;
+}
+
+.experiment-part-page.experiment-main-part-page.experiment-part-four-page {
+  min-height: 0;
+}
+
+.experiment-part-four-page .part-composition {
+  flex: 0 0 auto;
+}
+
+.experiment-main-part-page.experiment-part-four-page .observation-introduction {
+  gap: 38px;
+}
+
+.experiment-part-four-page .content-relative-continue {
+  margin-top: 0;
+}
+
 .observation-introduction h3 {
   margin: 0;
   font-size: clamp(36px, 2.65vw, 48px);
@@ -997,6 +1070,10 @@ a {
   font-weight: 400;
   letter-spacing: 0.035em;
   line-height: 1.42;
+}
+
+.part-observation-copy p + p {
+  margin-top: 1em;
 }
 
 .experiment-observations-page {
@@ -1442,6 +1519,15 @@ a {
     font-size: clamp(36px, 10.5vw, 50px);
   }
 
+  .experiment-explanations-page {
+    padding: 180px 6vw 80px;
+  }
+
+  .explanations-copy {
+    font-size: clamp(10.5px, 3vw, 12px);
+    line-height: 1.5;
+  }
+
   .introduction-copy {
     width: min(70ch, 88vw);
     margin-top: 16px;
@@ -1512,6 +1598,10 @@ a {
     overflow: visible;
   }
 
+  .experiment-part-page.experiment-main-part-page {
+    min-height: 100svh;
+  }
+
   .part-title {
     position: static;
     transform: none;
@@ -1524,6 +1614,19 @@ a {
     flex-direction: column;
     gap: 54px;
     margin-top: 58px;
+  }
+
+  .experiment-main-part-page .part-composition {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    gap: 54px;
+    margin: 58px 0 0;
+  }
+
+  .experiment-main-part-page .observation-introduction {
+    gap: 48px;
+    padding-bottom: 0;
   }
 
   .part-media {
@@ -1725,6 +1828,11 @@ a {
   .part-composition {
     top: 245px;
     bottom: auto;
+  }
+
+  .experiment-main-part-page .part-composition {
+    top: auto;
+    margin-top: 245px;
   }
 
   .part-media {

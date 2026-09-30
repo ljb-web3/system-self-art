@@ -10,6 +10,7 @@ import { supabase } from './lib/supabase'
 export const experiment00StudyStorageKey = 'system-self-experiment-00-study'
 
 const validStudySteps: Experiment00Step[] = [
+  'explanations',
   'welcome',
   'part-01',
   'observations-01-1',

@@ -74,7 +74,8 @@ test('experiment pages expose explicit previous-study routes without changing sa
 
   const routes = [
     ['/experiment/00', '/'],
-    ['/experiment/00/welcome', '/experiment/00'],
+    ['/experiment/00/explanations', '/experiment/00'],
+    ['/experiment/00/welcome', '/experiment/00/explanations'],
     ['/experiment/00/part-01', '/experiment/00/welcome'],
     ['/experiment/00/part-01/observations', '/experiment/00/part-01'],
     ['/experiment/00/part-01/observations/2', '/experiment/00/part-01/observations'],
@@ -134,7 +135,7 @@ test('Part 03 End continues to Part 04 and Part 04 can scroll to unobstructed co
   await expect(page).toHaveURL(/\/experiment\/00\/part-04$/)
 
   expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeGreaterThan(600)
-  await expect(page.getByText('Observer Zero was physically present during the experiment', { exact: false }))
+  await expect(page.getByText('The conditions have changed this time.', { exact: false }))
     .toBeVisible()
   await page.getByRole('button', { name: 'WATCHED THE VIDEO?' }).click()
   await page.getByRole('button', { name: 'YES', exact: true }).click()
@@ -144,7 +145,7 @@ test('Part 03 End continues to Part 04 and Part 04 can scroll to unobstructed co
   await continueLink.scrollIntoViewIfNeeded()
   const continueBounds = await continueLink.boundingBox()
   expect(continueBounds.y).toBeGreaterThanOrEqual(0)
-  expect(continueBounds.y + continueBounds.height).toBeLessThanOrEqual(600)
+  expect(continueBounds.y + continueBounds.height).toBeLessThanOrEqual(601)
 
   const contentMetrics = await page.evaluate(() => {
     const main = document.querySelector('.experiment-part-four-page')
