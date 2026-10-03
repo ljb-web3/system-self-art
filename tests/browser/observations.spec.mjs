@@ -1,5 +1,22 @@
 import { expect, test } from '@playwright/test'
 
+for (const part of ['02', '03']) {
+  test(`Part ${part} asks which subject rating feels more certain`, async ({ page }) => {
+    await page.goto(`/experiment/00/part-${part}/observations`)
+    await expect(page.locator('#observations-subject-label')).toHaveText("WHICH SUBJECT'S RATING ARE YOU MORE CONFIDENT ABOUT?")
+    await expect(page.locator('label[for="observations-reason"]')).toContainText('WHY DO YOU THINK THAT?')
+    await expect(page.locator('.observations-continue-link')).toHaveCount(0)
+    await page.getByRole('button', { name: 'FR', exact: true }).click()
+    await expect(page.locator('#observations-subject-label')).toHaveText('DU RÉSULTAT DE QUEL SUJET ÊTES-VOUS LE PLUS SÛR·E ?')
+    if (part === '03') {
+      await expect(page.locator('label[for="observations-reason"]')).toContainText('POURQUOI PENSEZ-VOUS CELA ?')
+    }
+    await expect(page.locator('.observations-subject-option')).toHaveText(['SUJET 1', 'SUJET 2'])
+    await page.getByRole('button', { name: 'SUJET 2', exact: true }).click()
+    await expect(page.locator('.observations-continue-link')).toBeVisible()
+  })
+}
+
 test('Part 01 continues to Observations 1/2 after both ratings', async ({ page }) => {
   await page.goto('/experiment/00/part-01')
 
@@ -27,6 +44,7 @@ test('Observations 1/2 contains only its two questions and continues after eithe
   const reason = page.locator('#observations-reason')
   await expect(title).toBeVisible()
   await expect(step).toBeVisible()
+  await expect(questionOne).toHaveText("WHICH SUBJECT'S RATING ARE YOU MORE CONFIDENT ABOUT?")
   await expect(page.locator('label[for="observations-reason"]')).toContainText('WHY DO YOU THINK THAT?')
   await expect(page.getByText('OPTIONAL', { exact: true })).toBeVisible()
   await expect(page.locator('.observations-word-question')).toHaveCount(0)
@@ -49,12 +67,7 @@ test('Observations 1/2 contains only its two questions and continues after eithe
 
   await reason.fill('A quiet sense of recognition.')
   let continueLink = page.getByRole('link', { name: /CONTINUE/ })
-  await expect(continueLink).toBeVisible()
-  await expect(continueLink).toHaveAttribute('href', '/experiment/00/part-01/observations/2')
-  const continueBounds = await continueLink.boundingBox()
-  const viewport = page.viewportSize()
-  expect(continueBounds.x + continueBounds.width).toBeGreaterThan(viewport.width * 0.8)
-  expect(continueBounds.y + continueBounds.height).toBeGreaterThan(viewport.height * 0.8)
+  await expect(continueLink).toHaveCount(0)
   await reason.fill('')
   await expect(page.locator('.observations-continue-link')).toHaveCount(0)
 
@@ -62,6 +75,11 @@ test('Observations 1/2 contains only its two questions and continues after eithe
   const subjectTwo = page.getByRole('button', { name: 'SUBJECT 2', exact: true })
   await subjectOne.click()
   await expect(continueLink).toBeVisible()
+  await expect(continueLink).toHaveAttribute('href', '/experiment/00/part-01/observations/2')
+  const continueBounds = await continueLink.boundingBox()
+  const viewport = page.viewportSize()
+  expect(continueBounds.x + continueBounds.width).toBeGreaterThan(viewport.width * 0.8)
+  expect(continueBounds.y + continueBounds.height).toBeGreaterThan(viewport.height * 0.8)
   await subjectTwo.click()
   await expect(subjectOne).toHaveAttribute('aria-pressed', 'false')
   await expect(subjectTwo).toHaveAttribute('aria-pressed', 'true')
@@ -80,9 +98,10 @@ test('Observations preserves local answers and keeps five-word exercises optiona
   await expect(page.getByLabel('2 / 2')).toHaveText('2/2')
   await expect(page.locator('.observations-subject-options')).toHaveCount(0)
   await expect(page.locator('#observations-reason')).toHaveCount(0)
-  await expect(page.locator('.observations-word-question')).toHaveCount(3)
-  await expect(page.locator('.observations-word-input')).toHaveCount(15)
-  await expect(page.locator('.observations-optional')).toHaveText(['FACULTATIF', 'FACULTATIF', 'FACULTATIF'])
+  await expect(page.locator('.observations-word-question')).toHaveCount(2)
+  await expect(page.locator('.observations-word-input')).toHaveCount(10)
+  await expect(page.locator('.observations-word-question .observations-question-label')).toContainText(['DÉCRIVEZ LE SUJET 1 EN CINQ MOTS.', 'DÉCRIVEZ LE SUJET 2 EN CINQ MOTS.'])
+  await expect(page.locator('.observations-optional')).toHaveText(['FACULTATIF', 'FACULTATIF'])
   await expect(page.locator('.observations-continue-link')).toBeVisible()
 
   await page.goBack()
@@ -99,7 +118,7 @@ test('Observations preserves local answers and keeps five-word exercises optiona
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'white')
   await expect(wordInputs.nth(0)).toHaveValue('attentive')
   await expect(wordInputs.nth(1)).toHaveValue('patient')
-  await expect(page.locator('.observations-optional')).toHaveText(['OPTIONAL', 'OPTIONAL', 'OPTIONAL'])
+  await expect(page.locator('.observations-optional')).toHaveText(['OPTIONAL', 'OPTIONAL'])
 
   const optionalStyle = await page.locator('.observations-word-question').first().evaluate(element => {
     const question = element.querySelector('.observations-question-label')
@@ -128,7 +147,7 @@ test('Observations 2/2 remains centered and wraps five-word inputs on mobile', a
   await expect(page.getByRole('heading', { name: 'OBSERVATIONS' })).toBeVisible()
   await expect(page.getByLabel('2 / 2')).toBeVisible()
   await expect(page.locator('.observations-question').first()).toHaveCSS('text-align', 'center')
-  await expect(page.locator('.observations-word-input')).toHaveCount(15)
+  await expect(page.locator('.observations-word-input')).toHaveCount(10)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375)
 
   const firstWordGroupInputs = page.locator('.observations-word-question').first().locator('input')

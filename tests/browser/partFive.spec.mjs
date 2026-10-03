@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
   await mockParticipantIdentity(page)
 })
 
-test('Part 04 End flows into the persistent Part 05 rating and final subject acknowledgment', async ({ page }) => {
+test('Part 04 End flows into the persistent Part 05 answer and final subject acknowledgment', async ({ page }) => {
   await page.goto('/experiment/00/part-04/end')
   await page.getByRole('button', { name: 'YES', exact: true }).click()
   const partFourContinue = page.getByRole('link', { name: /CONTINUE/ })
@@ -21,29 +21,31 @@ test('Part 04 End flows into the persistent Part 05 rating and final subject ack
   await expect(page.locator('.part-five-composition .video-placeholder')).toHaveCount(1)
 
   const question = 'Based only on the information available to you, would you want to connect further with me?'
-  const scale = page.locator('.part-five-rating .rating-option')
+  const answers = page.locator('.part-five-rating .observations-subject-option')
   await expect(page.getByText(question, { exact: true })).toBeVisible()
-  await expect(scale).toHaveCount(10)
-  await expect(scale).toHaveText(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
+  await expect(answers).toHaveCount(2)
+  await expect(answers).toHaveText(['YES', 'NO'])
   await expect(page.getByRole('link', { name: /CONTINUE/ })).toHaveCount(0)
 
-  await scale.filter({ hasText: /^7$/ }).click()
-  await expect(scale.filter({ hasText: /^7$/ })).toHaveAttribute('aria-pressed', 'true')
+  await answers.filter({ hasText: /^YES$/ }).click()
+  await expect(answers.filter({ hasText: /^YES$/ })).toHaveAttribute('aria-pressed', 'true')
   await expect(page.getByRole('link', { name: /CONTINUE/ })).toBeVisible()
-  await scale.filter({ hasText: /^3$/ }).click()
-  await expect(scale.filter({ hasText: /^3$/ })).toHaveAttribute('aria-pressed', 'true')
-  await expect(scale.filter({ hasText: /^7$/ })).toHaveAttribute('aria-pressed', 'false')
+  await answers.filter({ hasText: /^NO$/ }).click()
+  await expect(answers.filter({ hasText: /^NO$/ })).toHaveAttribute('aria-pressed', 'true')
+  await expect(answers.filter({ hasText: /^YES$/ })).toHaveAttribute('aria-pressed', 'false')
 
   let saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), storageKey)
-  expect(saved.part05.connectionRating).toBe(3)
+  expect(saved.part05.wantsFurtherConnection).toBe('no')
   expect(saved.currentStep).toBe('part-05')
 
   await page.reload()
-  await expect(scale.filter({ hasText: /^3$/ })).toHaveAttribute('aria-pressed', 'true')
+  await expect(answers.filter({ hasText: /^NO$/ })).toHaveAttribute('aria-pressed', 'true')
   await page.getByRole('button', { name: 'FR', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'PARTIE 05' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'OBSERVE THE OBSERVER' })).toBeVisible()
   await expect(page.getByText(/avez-vous envie de “connecter” davantager avec moi/)).toBeVisible()
+  await expect(answers).toHaveText(['OUI', 'NON'])
+  await expect(answers.filter({ hasText: /^NON$/ })).toHaveAttribute('aria-pressed', 'true')
   await page.getByRole('button', { name: 'BLACK', exact: true }).click()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'black')
 
@@ -99,7 +101,7 @@ test('Part 05 preserves main-page video geometry and the enlarged arrow stays fi
   expect((await arrow.boundingBox()).y).toBeCloseTo(initialArrowY, 0)
 
   await page.goto('/experiment/00/part-05')
-  await page.locator('.part-five-rating .rating-option').filter({ hasText: /^5$/ }).click()
+  await page.locator('.part-five-rating .observations-subject-option').filter({ hasText: /^YES$/ }).click()
   const contentMetrics = await page.evaluate(() => {
     const rating = document.querySelector('.part-five-rating')
     const continueElement = document.querySelector('.part-continue-link')
@@ -133,7 +135,7 @@ test('Part 04 and Part 05 Continue controls follow their completed interactions 
   expect(placement.position).toBe('relative')
 
   await page.goto('/experiment/00/part-05')
-  await page.locator('.part-five-rating .rating-option').filter({ hasText: /^5$/ }).click()
+  await page.locator('.part-five-rating .observations-subject-option').filter({ hasText: /^YES$/ }).click()
   placement = await page.evaluate(() => {
     const interaction = document.querySelector('.part-five-rating').getBoundingClientRect()
     const continueElement = document.querySelector('.part-continue-link')

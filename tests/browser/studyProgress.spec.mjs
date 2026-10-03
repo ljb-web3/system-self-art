@@ -49,7 +49,6 @@ test('Experiment 00 persists identity, answers, checkpoints, and resumes after P
   const words = [
     'attentive', 'patient', 'curious', 'gentle', 'reserved',
     'direct', 'restless', 'careful', 'distant', 'watchful',
-    'open', 'reflective', 'uncertain', 'warm', 'present',
   ]
   const wordInputs = page.locator('.observations-word-input')
   for (let index = 0; index < words.length; index += 1) {
@@ -58,7 +57,7 @@ test('Experiment 00 persists identity, answers, checkpoints, and resumes after P
 
   await page.reload()
   await expect(wordInputs.first()).toHaveValue('attentive')
-  await expect(wordInputs.last()).toHaveValue('present')
+  await expect(wordInputs.last()).toHaveValue('watchful')
   await page.getByRole('link', { name: /CONTINUE/ }).click()
 
   await expect(page).toHaveURL(/\/experiment\/00\/part-01\/reveal$/)
@@ -77,8 +76,8 @@ test('Experiment 00 persists identity, answers, checkpoints, and resumes after P
     subject1ConnectionRating: 5,
     subject2ConnectionRating: 6,
   })
-  expect(savedAtEnd.observationsPart01.selectedSubject).toBe('subject-2')
-  expect(savedAtEnd.observationsPart01.selfWords).toEqual(words.slice(10))
+  expect(savedAtEnd.observationsPart01.moreConfidentSubjectRating).toBe('subject-2')
+  expect(savedAtEnd.observationsPart01.otherSubjectWords).toEqual(words.slice(5))
 
   await page.getByRole('link', { name: 'EXPERIMENT 00', exact: true }).click()
   await expect(page).toHaveURL(/\/experiment\/00\/part-01\/end$/)

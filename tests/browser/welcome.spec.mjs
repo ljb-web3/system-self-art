@@ -5,6 +5,25 @@ test.beforeEach(async ({ page }) => {
   await mockParticipantIdentity(page)
 })
 
+test('Explanations types while Continue is immediately available and theme changes preserve progress', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/experiment/00/explanations')
+
+  const visibleCopy = page.locator('.explanations-copy p').first().locator('[aria-hidden="true"]')
+  const typedLength = () => visibleCopy.evaluate(element =>
+    element.firstChild?.nodeType === Node.TEXT_NODE ? element.firstChild.textContent.length : 0,
+  )
+  const continueLink = page.getByRole('link', { name: /CONTINUE/ })
+  await expect(continueLink).toBeVisible()
+  await expect.poll(typedLength).toBeGreaterThan(0)
+  const beforeThemeChange = await typedLength()
+  await page.getByRole('button', { name: 'BLACK', exact: true }).click()
+  expect(await typedLength()).toBeGreaterThanOrEqual(beforeThemeChange)
+  await expect.poll(typedLength).toBeGreaterThan(beforeThemeChange)
+  await continueLink.click()
+  await expect(page).toHaveURL(/\/experiment\/00\/welcome$/)
+})
+
 test('Explanations uses the PDF copy, language controls, and explicit adjacent routes', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/experiment/00')

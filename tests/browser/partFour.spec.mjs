@@ -34,25 +34,22 @@ test('Part 04 follows its Observer Zero flow and persists every answer', async (
   await page.getByRole('link', { name: /CONTINUER/ }).click()
 
   await expect(page).toHaveURL(/\/part-04\/observations$/)
-  await expect(page.locator('.observations-question')).toHaveCount(3)
+  await expect(page.locator('.observations-question')).toHaveCount(2)
   await expect(page.locator('.observations-step')).toHaveCount(0)
   await expect(page.locator('.observations-word-input')).toHaveCount(0)
   await expect(page.locator('#observations-reason')).toHaveCount(0)
   await expect(page.getByRole('link', { name: /CONTINUER/ })).toHaveCount(0)
 
   const questions = page.locator('.observations-question')
-  await questions.nth(0).getByRole('button', { name: 'SUJET 1', exact: true }).click()
-  await questions.nth(1).getByRole('button', { name: 'OUI', exact: true }).click()
+  await questions.nth(0).getByRole('button', { name: 'OUI', exact: true }).click()
   await expect(page.getByRole('link', { name: /CONTINUER/ })).toHaveCount(0)
-  await questions.nth(2).getByRole('button', { name: 'NON', exact: true }).click()
+  await questions.nth(1).getByRole('button', { name: 'NON', exact: true }).click()
   await expect(page.getByRole('link', { name: /CONTINUER/ })).toBeVisible()
 
   await page.reload()
-  await expect(questions.nth(0).getByRole('button', { name: 'SUBJECT 1', exact: true }))
+  await expect(questions.nth(0).getByRole('button', { name: 'YES', exact: true }))
     .toHaveAttribute('aria-pressed', 'true')
-  await expect(questions.nth(1).getByRole('button', { name: 'YES', exact: true }))
-    .toHaveAttribute('aria-pressed', 'true')
-  await expect(questions.nth(2).getByRole('button', { name: 'NO', exact: true }))
+  await expect(questions.nth(1).getByRole('button', { name: 'NO', exact: true }))
     .toHaveAttribute('aria-pressed', 'true')
   await page.getByRole('link', { name: /CONTINUE/ }).click()
 
@@ -84,7 +81,6 @@ test('Part 04 follows its Observer Zero flow and persists every answer', async (
   expect(saved.part04).toEqual({
     watchedVideo: 'yes',
     observations: {
-      observerConnection: 'subject-1',
       observerAccuracy: 'yes',
       selfAccuracy: 'no',
     },

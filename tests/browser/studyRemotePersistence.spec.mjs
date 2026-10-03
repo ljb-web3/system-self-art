@@ -7,7 +7,7 @@ const participantId = '12345678-1234-4123-8123-123456789abc'
 
 function emptyStudy(updatedAt = new Date().toISOString()) {
   const emptyObservations = () => ({
-    selectedSubject: '',
+    moreConfidentSubjectRating: '',
     reason: '',
     chosenSubjectWords: ['', '', '', '', ''],
     otherSubjectWords: ['', '', '', '', ''],
@@ -25,10 +25,10 @@ function emptyStudy(updatedAt = new Date().toISOString()) {
     part03: { subject1ConnectionRating: null, subject2ConnectionRating: null },
     part04: {
       watchedVideo: null,
-      observations: { observerConnection: null, observerAccuracy: null, selfAccuracy: null },
+      observations: { observerAccuracy: null, selfAccuracy: null },
       comparison: null,
     },
-    part05: { connectionRating: null },
+    part05: { wantsFurtherConnection: null },
     observationsPart01: emptyObservations(),
     observationsPart02: emptyObservations(),
     observationsPart03: emptyObservations(),
@@ -156,7 +156,7 @@ test('Parts 02/03 use two three-word groups and Parts 04/05 persist their curren
   state.currentStep = 'part-05'
   state.part02 = { subject1ConnectionRating: 4, subject2ConnectionRating: 8 }
   state.observationsPart02 = {
-    selectedSubject: 'subject-1',
+    moreConfidentSubjectRating: 'subject-1',
     reason: 'calm',
     chosenSubjectWords: ['one', 'two', 'three', 'obsolete-four', 'obsolete-five'],
     otherSubjectWords: ['obsolete', 'obsolete', 'obsolete', '', ''],
@@ -164,22 +164,21 @@ test('Parts 02/03 use two three-word groups and Parts 04/05 persist their curren
   }
   state.part03 = { subject1ConnectionRating: 6, subject2ConnectionRating: 7 }
   state.observationsPart03 = {
-    selectedSubject: 'subject-2',
+    moreConfidentSubjectRating: 'subject-2',
     reason: 'familiar',
     chosenSubjectWords: ['red', 'green', 'blue', 'obsolete-four', 'obsolete-five'],
-    otherSubjectWords: ['obsolete', 'obsolete', 'obsolete', '', ''],
+    otherSubjectWords: ['soft', 'clear', 'warm', '', ''],
     selfWords: ['soft', 'clear', 'warm', 'obsolete-four', 'obsolete-five'],
   }
   state.part04 = {
     watchedVideo: 'yes',
     observations: {
-      observerConnection: 'subject-2',
       observerAccuracy: 'yes',
       selfAccuracy: 'no',
     },
     comparison: 'yes',
   }
-  state.part05 = { connectionRating: 9 }
+  state.part05 = { wantsFurtherConnection: 'yes' }
 
   const api = await mockParticipantIdentity(page)
   await seedStorage(page, state)
@@ -191,14 +190,22 @@ test('Parts 02/03 use two three-word groups and Parts 04/05 persist their curren
   expect(payload.part_02_data.selfWords).toEqual(['four', 'five', 'six'])
   expect(payload.part_02_data).not.toHaveProperty('otherSubjectWords')
   expect(payload.part_03_data.chosenSubjectWords).toEqual(['red', 'green', 'blue'])
-  expect(payload.part_03_data.selfWords).toEqual(['soft', 'clear', 'warm'])
-  expect(payload.part_03_data).not.toHaveProperty('otherSubjectWords')
+  expect(payload.part_03_data.otherSubjectWords).toEqual(['soft', 'clear', 'warm'])
+  expect(payload.part_03_data).not.toHaveProperty('selfWords')
   expect(payload.part_04_data).toEqual({
     watchedVideo: 'yes',
-    observerZeroConnection: 'subject-2',
     observerZeroMoreAccurateThanInaccurate: 'yes',
     participantMoreAccurateThanObserverZero: 'no',
     postRevealComparison: 'yes',
   })
-  expect(payload.part_05_data).toEqual({ connectionRatingToCreator: 9 })
+  expect(payload.part_05_data).toEqual({ wantsFurtherConnection: 'yes' })
+
+  await expect.poll(() => api.study.records.get(participantId)?.part_05_data.wantsFurtherConnection).toBe('yes')
+  await page.evaluate(key => localStorage.removeItem(key), studyKey)
+  await page.reload()
+  await expect(page.locator('.part-five-rating').getByRole('button', { name: 'YES' }))
+    .toHaveAttribute('aria-pressed', 'true')
+  await page.goto('/experiment/00/part-03/observations')
+  await expect(page.getByRole('button', { name: 'SUBJECT 2', exact: true }))
+    .toHaveAttribute('aria-pressed', 'true')
 })

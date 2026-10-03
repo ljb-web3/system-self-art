@@ -31,10 +31,10 @@ for (const part of ['02', '03']) {
     await expect(questions).toHaveCount(2)
     await expect(inputs).toHaveCount(6)
     await expect(questions.nth(0).getByRole('heading')).toContainText(
-      'DESCRIBE THE SUBJECT YOU CHOSE IN THREE WORDS.',
+      part === '02' ? 'DESCRIBE THE SUBJECT YOU CHOSE IN THREE WORDS.' : 'DESCRIBE SUBJECT 1 IN THREE WORDS.',
     )
     await expect(questions.nth(1).getByRole('heading')).toContainText(
-      'DESCRIBE YOURSELF IN THREE WORDS.',
+      part === '02' ? 'DESCRIBE YOURSELF IN THREE WORDS.' : 'DESCRIBE SUBJECT 2 IN THREE WORDS.',
     )
     await expect(questions.locator('.observations-optional')).toHaveText(['OPTIONAL', 'OPTIONAL'])
     expect(await inputs.evaluateAll(elements => elements.map(element => element.placeholder))).toEqual([

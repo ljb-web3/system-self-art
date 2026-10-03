@@ -121,14 +121,13 @@ const translations = {
     observations: {
       title: 'OBSERVATIONS',
       introduction: 'Before continuing, record your impressions of the participants. There are no correct or incorrect answers. We are interested in how you perceived them and how you perceive yourself.',
-      connection: 'WHICH SUBJECT DO YOU THINK YOU WOULD CONNECT (OR LIKE) MORE?',
+      connection: "WHICH SUBJECT'S RATING ARE YOU MORE CONFIDENT ABOUT?",
       subjects: ['SUBJECT 1', 'SUBJECT 2'],
       reason: 'WHY DO YOU THINK THAT?',
       optional: 'OPTIONAL',
       wordOptional: 'OPTIONAL',
-      chosenSubject: 'DESCRIBE THE SUBJECT YOU CHOSE IN FIVE WORDS.',
-      otherSubject: 'DESCRIBE THE OTHER SUBJECT IN FIVE WORDS.',
-      self: 'DESCRIBE YOURSELF IN FIVE WORDS.',
+      chosenSubject: 'DESCRIBE SUBJECT 1 IN FIVE WORDS.',
+      otherSubject: 'DESCRIBE SUBJECT 2 IN FIVE WORDS.',
       words: ['WORD 1', 'WORD 2', 'WORD 3', 'WORD 4', 'WORD 5'],
     },
     endPartOne: {
@@ -146,7 +145,7 @@ const translations = {
         observationCopy: experiment00PdfCopy.en.part02,
         annotation: 'Part 02 timestamp annotation placeholder.',
         observationsIntroduction: 'Record your impressions before continuing.',
-        observationsConnection: 'WHICH SUBJECT DO YOU THINK YOU WOULD CONNECT WITH (OR LIKE) MORE?',
+        observationsConnection: "WHICH SUBJECT'S RATING ARE YOU MORE CONFIDENT ABOUT?",
         observationsReason: 'WHY DO YOU THINK THAT?',
         chosenSubject: 'DESCRIBE THE SUBJECT YOU CHOSE IN THREE WORDS.',
         self: 'DESCRIBE YOURSELF IN THREE WORDS.',
@@ -158,10 +157,10 @@ const translations = {
         observationCopy: experiment00PdfCopy.en.part03,
         annotation: 'Part 03 timestamp annotation placeholder.',
         observationsIntroduction: 'Record your impressions before continuing.',
-        observationsConnection: 'PART 03 QUESTION 1',
-        observationsReason: 'PART 03 QUESTION 2',
-        chosenSubject: 'DESCRIBE THE SUBJECT YOU CHOSE IN THREE WORDS.',
-        self: 'DESCRIBE YOURSELF IN THREE WORDS.',
+        observationsConnection: "WHICH SUBJECT'S RATING ARE YOU MORE CONFIDENT ABOUT?",
+        observationsReason: 'WHY DO YOU THINK THAT?',
+        chosenSubject: 'DESCRIBE SUBJECT 1 IN THREE WORDS.',
+        otherSubject: 'DESCRIBE SUBJECT 2 IN THREE WORDS.',
       },
     },
     endPartTwo: {
@@ -189,10 +188,6 @@ const translations = {
       observationsTitle: 'OBSERVATIONS',
       observationsIntroduction: 'Answer the questions below before seeing the reveal.',
       observationQuestions: [
-        {
-          question: 'WHICH SUBJECT DO YOU THINK OBSERVER ZERO WOULD CONNECT WITH MORE IF SHE WERE A PARTICIPANT?',
-          options: ['SUBJECT 1', 'SUBJECT 2'],
-        },
         {
           question: 'DO YOU THINK OBSERVER ZERO WAS MORE ACCURATE THAN INACCURATE IN HER ANSWERS?',
           options: ['YES', 'NO'],
@@ -327,14 +322,13 @@ const translations = {
     observations: {
       title: 'OBSERVATIONS',
       introduction: 'Avant de continuer, notez vos impressions sur les participants. Il n\'y a pas de bonne ou de mauvaise réponse.',
-      connection: 'AVEC QUEL SUJET PENSEZ-VOUS QUE VOUS CONNECTERIEZ LE PLUS?',
+      connection: 'DU RÉSULTAT DE QUEL SUJET ÊTES-VOUS LE PLUS SÛR·E ?',
       subjects: ['SUJET 1', 'SUJET 2'],
       reason: 'EXPLIQUEZ VOTRE REPONSE',
       optional: 'OPTIONNEL',
       wordOptional: 'FACULTATIF',
-      chosenSubject: 'DÉCRIVEZ LE SUJET QUE VOUS AVEZ CHOISI EN CINQ MOTS.',
-      otherSubject: 'DÉCRIVEZ L\'AUTRE SUJET EN CINQ MOTS.',
-      self: 'DÉCRIVEZ-VOUS EN CINQ MOTS.',
+      chosenSubject: 'DÉCRIVEZ LE SUJET 1 EN CINQ MOTS.',
+      otherSubject: 'DÉCRIVEZ LE SUJET 2 EN CINQ MOTS.',
       words: ['MOT 1', 'MOT 2', 'MOT 3', 'MOT 4', 'MOT 5'],
     },
     endPartOne: {
@@ -352,7 +346,7 @@ const translations = {
         observationCopy: experiment00PdfCopy.fr.part02,
         annotation: 'Emplacement réservé pour une annotation de la partie 02.',
         observationsIntroduction: 'Notez vos impressions avant de continuer. Il n\'y a pas de bonne ou de mauvaise réponse.',
-        observationsConnection: 'AVEC QUEL SUJET PENSEZ-VOUS QUE VOUS CONNECTERIEZ LE PLUS?',
+        observationsConnection: 'DU RÉSULTAT DE QUEL SUJET ÊTES-VOUS LE PLUS SÛR·E ?',
         observationsReason: 'EXPLIQUEZ VOTRE REPONSE',
         chosenSubject: 'DÉCRIVEZ LE SUJET QUE VOUS AVEZ CHOISI EN TROIS MOTS.',
         self: 'DÉCRIVEZ-VOUS EN TROIS MOTS.',
@@ -364,10 +358,10 @@ const translations = {
         observationCopy: experiment00PdfCopy.fr.part03,
         annotation: 'Emplacement réservé pour une annotation de la partie 03.',
         observationsIntroduction: 'Notez vos impressions sur les participants avant de continuer. Il n\'y a pas de bonne ou de mauvaise réponse.',
-        observationsConnection: 'AVEC QUEL SUJET PENSEZ-VOUS QUE VOUS CONNECTERIEZ LE PLUS?',
-        observationsReason: 'EXPLIQUEZ VOTRE REPONSE',
-        chosenSubject: 'DÉCRIVEZ LE SUJET QUE VOUS AVEZ CHOISI EN TROIS MOTS.',
-        self: 'DÉCRIVEZ-VOUS EN TROIS MOTS.',
+        observationsConnection: 'DU RÉSULTAT DE QUEL SUJET ÊTES-VOUS LE PLUS SÛR·E ?',
+        observationsReason: 'POURQUOI PENSEZ-VOUS CELA ?',
+        chosenSubject: 'DÉCRIVEZ LE SUJET 1 EN TROIS MOTS.',
+        otherSubject: 'DÉCRIVEZ LE SUJET 2 EN TROIS MOTS.',
       },
     },
     endPartTwo: {
@@ -395,10 +389,6 @@ const translations = {
       observationsTitle: 'OBSERVATIONS',
       observationsIntroduction: 'Répondez aux questions ci-dessous pour voir les résultats.',
       observationQuestions: [
-        {
-          question: 'AVEC QUEL SUJET PENSEZ-VOUS QU’OBSERVER ZERO AURAIT LE PLUS DE CONNEXION SI ELLE ÉTAIT PARTICIPANTE ?',
-          options: ['SUJET 1', 'SUJET 2'],
-        },
         {
           question: 'PENSEZ-VOUS QU’OBSERVER ZERO A ÉTÉ PLUS JUSTE QU’INEXACTE DANS SES RÉPONSES ?',
           options: ['OUI', 'NON'],
@@ -498,7 +488,9 @@ function getObservationsText(language: Language, partNumber: PartNumber) {
     connection: placeholder.observationsConnection,
     reason: placeholder.observationsReason,
     chosenSubject: placeholder.chosenSubject,
-    self: placeholder.self,
+    otherSubject: partNumber === '03'
+      ? translations[language].additionalParts['03'].otherSubject
+      : base.otherSubject,
   }
 }
 
@@ -931,7 +923,7 @@ function ExperimentExplanationsPage({
       <section className="experiment-explanations">
         <h2 className="experiment-introduction-title">{text.title}</h2>
         <div className="explanations-copy">
-          {text.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+          <TypewriterText paragraphs={text.paragraphs} restartOnTextChange />
         </div>
         <HomeLink
           href="/experiment/00/welcome"
@@ -1542,13 +1534,13 @@ function ExperimentObservationsPage({
   const text = getObservationsText(language, partNumber)
   const structure = partStructure[partNumber]
   const observations = studyState?.[structure.observationsKey]
-  const selectedSubject = observations?.selectedSubject ?? ''
+  const selectedSubject = observations?.moreConfidentSubjectRating ?? ''
   const reason = observations?.reason ?? ''
   const chosenSubjectWords = observations?.chosenSubjectWords ?? ['', '', '', '', '']
   const otherSubjectWords = observations?.otherSubjectWords ?? ['', '', '', '', '']
   const selfWords = observations?.selfWords ?? ['', '', '', '', '']
   const wordQuestionLength = partNumber === '01' ? 5 : 3
-  const firstPageComplete = selectedSubject !== '' || reason.trim() !== ''
+  const firstPageComplete = selectedSubject !== ''
   const requiredAnswersComplete = step === 1 ? firstPageComplete : true
   const continueDestination = step === 1
     ? `/experiment/00/part-${partNumber}/observations/2`
@@ -1624,7 +1616,7 @@ function ExperimentObservationsPage({
                         aria-pressed={isSelected}
                         onClick={() => updateObservations(current => ({
                           ...current,
-                          selectedSubject: value,
+                          moreConfidentSubjectRating: value,
                         }))}
                       >
                         {subject}
@@ -1661,25 +1653,27 @@ function ExperimentObservationsPage({
                 onChange={(index, value) => updateWords('chosenSubjectWords', index, value)}
               />
 
-              {partNumber === '01' && (
+              {partNumber !== '02' && (
                 <FiveWordInputs
                   id="other-subject-words"
                   label={text.otherSubject}
                   optionalLabel={text.wordOptional}
-                  placeholders={text.words}
-                  words={otherSubjectWords}
+                  placeholders={text.words.slice(0, wordQuestionLength)}
+                  words={otherSubjectWords.slice(0, wordQuestionLength)}
                   onChange={(index, value) => updateWords('otherSubjectWords', index, value)}
                 />
               )}
 
-              <FiveWordInputs
-                id="self-words"
-                label={text.self}
-                optionalLabel={text.wordOptional}
-                placeholders={text.words.slice(0, wordQuestionLength)}
-                words={selfWords.slice(0, wordQuestionLength)}
-                onChange={(index, value) => updateWords('selfWords', index, value)}
-              />
+              {partNumber === '02' && (
+                <FiveWordInputs
+                  id="self-words"
+                  label={translations[language].additionalParts['02'].self}
+                  optionalLabel={text.wordOptional}
+                  placeholders={text.words.slice(0, wordQuestionLength)}
+                  words={selfWords.slice(0, wordQuestionLength)}
+                  onChange={(index, value) => updateWords('selfWords', index, value)}
+                />
+              )}
             </>
           )}
         </form>
@@ -1948,12 +1942,8 @@ function ExperimentPartFourObservationsPage({
   const { studyState, ensureStudyState, updateStudyState, setCurrentStep } = useExperiment00Study()
   const text = translations[language].partFour
   const answers = studyState?.part04.observations
-  const values = [
-    answers?.observerConnection ?? null,
-    answers?.observerAccuracy ?? null,
-    answers?.selfAccuracy ?? null,
-  ]
-  const fields = ['observerConnection', 'observerAccuracy', 'selfAccuracy'] as const
+  const values = [answers?.observerAccuracy ?? null, answers?.selfAccuracy ?? null]
+  const fields = ['observerAccuracy', 'selfAccuracy'] as const
   const complete = values.every(value => value !== null)
 
   useEffect(() => {
@@ -1962,9 +1952,7 @@ function ExperimentPartFourObservationsPage({
 
   function selectAnswer(questionIndex: number, optionIndex: number) {
     const field = fields[questionIndex]
-    const value = questionIndex === 0
-      ? (optionIndex === 0 ? 'subject-1' : 'subject-2')
-      : (optionIndex === 0 ? 'yes' : 'no')
+    const value = optionIndex === 0 ? 'yes' : 'no'
 
     updateStudyState(current => ({
       ...current,
@@ -2019,9 +2007,7 @@ function ExperimentPartFourObservationsPage({
                 aria-labelledby={`part-four-question-${questionIndex + 1}`}
               >
                 {question.options.map((option, optionIndex) => {
-                  const optionValue = questionIndex === 0
-                    ? (optionIndex === 0 ? 'subject-1' : 'subject-2')
-                    : (optionIndex === 0 ? 'yes' : 'no')
+                  const optionValue = optionIndex === 0 ? 'yes' : 'no'
                   const selected = values[questionIndex] === optionValue
 
                   return (
@@ -2241,18 +2227,17 @@ function ExperimentPartFivePage({
 }: Omit<ExperimentPageProps, 'kind' | 'series' | 'part'>) {
   const { studyState, ensureStudyState, updateStudyState, setCurrentStep } = useExperiment00Study()
   const text = translations[language].partFive
-  const connectionRating = studyState?.part05.connectionRating ?? null
-  const ratingValues = Array.from({ length: 10 }, (_, index) => index + 1)
+  const wantsFurtherConnection = studyState?.part05.wantsFurtherConnection ?? null
 
   useEffect(() => {
     ensureStudyState()
   }, [ensureStudyState])
 
-  function selectConnectionRating(rating: number) {
+  function selectConnectionAnswer(answer: 'yes' | 'no') {
     updateStudyState(current => ({
       ...current,
       currentStep: 'part-05',
-      part05: { ...current.part05, connectionRating: rating },
+      part05: { ...current.part05, wantsFurtherConnection: answer },
     }))
   }
 
@@ -2291,23 +2276,23 @@ function ExperimentPartFivePage({
             <p id="part-five-connection-question" className="subject-question part-five-question">
               {text.connectionQuestion}
             </p>
-            <div className="rating-options" aria-labelledby="part-five-connection-question">
-              {ratingValues.map(rating => (
+            <div className="observations-subject-options" role="group" aria-labelledby="part-five-connection-question">
+              {(['yes', 'no'] as const).map((answer, index) => (
                 <button
-                  key={rating}
+                  key={answer}
                   type="button"
-                  className={`rating-option${connectionRating === rating ? ' is-selected' : ''}`}
-                  aria-pressed={connectionRating === rating}
-                  onClick={() => selectConnectionRating(rating)}
+                  className={`observations-subject-option${wantsFurtherConnection === answer ? ' is-selected' : ''}`}
+                  aria-pressed={wantsFurtherConnection === answer}
+                  onClick={() => selectConnectionAnswer(answer)}
                 >
-                  {rating}
+                  {index === 0 ? translations[language].partOne.yes : translations[language].partOne.no}
                 </button>
               ))}
             </div>
           </div>
           </div>
 
-          {connectionRating !== null && (
+          {wantsFurtherConnection !== null && (
             <HomeLink
               href="/experiment/00/end"
               className="continue-link part-continue-link content-relative-continue"

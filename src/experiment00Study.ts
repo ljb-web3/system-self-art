@@ -34,7 +34,7 @@ export type PartRatings = {
 }
 
 export type PartObservations = {
-  selectedSubject: ObservationSubject
+  moreConfidentSubjectRating: ObservationSubject
   reason: string
   chosenSubjectWords: string[]
   otherSubjectWords: string[]
@@ -46,7 +46,6 @@ export type BinaryAnswer = 'yes' | 'no' | null
 export type PartFourState = {
   watchedVideo: BinaryAnswer
   observations: {
-    observerConnection: 'subject-1' | 'subject-2' | null
     observerAccuracy: BinaryAnswer
     selfAccuracy: BinaryAnswer
   }
@@ -54,7 +53,7 @@ export type PartFourState = {
 }
 
 export type PartFiveState = {
-  connectionRating: number | null
+  wantsFurtherConnection: BinaryAnswer
 }
 
 export type Experiment00StudyState = {

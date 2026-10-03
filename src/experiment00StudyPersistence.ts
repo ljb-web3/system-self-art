@@ -77,7 +77,7 @@ function emptyRatings(): PartRatings {
 
 function emptyObservations(): PartObservations {
   return {
-    selectedSubject: '',
+    moreConfidentSubjectRating: '',
     reason: '',
     chosenSubjectWords: emptyWords(),
     otherSubjectWords: emptyWords(),
@@ -89,7 +89,6 @@ function emptyPartFour(): PartFourState {
   return {
     watchedVideo: null,
     observations: {
-      observerConnection: null,
       observerAccuracy: null,
       selfAccuracy: null,
     },
@@ -139,7 +138,7 @@ function readSelectedSubject(value: unknown) {
 function readCachedObservations(value: unknown): PartObservations {
   const observations = (value ?? {}) as Record<string, unknown>
   return {
-    selectedSubject: readSelectedSubject(observations.selectedSubject),
+    moreConfidentSubjectRating: readSelectedSubject(observations.moreConfidentSubjectRating),
     reason: readString(observations.reason),
     chosenSubjectWords: readWords(observations.chosenSubjectWords),
     otherSubjectWords: readWords(observations.otherSubjectWords),
@@ -153,7 +152,7 @@ function readRemoteObservations(
   includesOtherSubject: boolean,
 ): PartObservations {
   return {
-    selectedSubject: readSelectedSubject(value.observationSelectedSubject),
+    moreConfidentSubjectRating: readSelectedSubject(value.moreConfidentSubjectRating),
     reason: readString(value.observationReason),
     chosenSubjectWords: readWords(value.chosenSubjectWords, wordCount),
     otherSubjectWords: includesOtherSubject
@@ -170,13 +169,9 @@ function readBinaryAnswer(value: unknown) {
 function readCachedPartFour(value: unknown): PartFourState {
   const partFour = (value ?? {}) as Record<string, unknown>
   const observations = (partFour.observations ?? {}) as Record<string, unknown>
-  const observerConnection = observations.observerConnection
   return {
     watchedVideo: readBinaryAnswer(partFour.watchedVideo),
     observations: {
-      observerConnection: observerConnection === 'subject-1' || observerConnection === 'subject-2'
-        ? observerConnection
-        : null,
       observerAccuracy: readBinaryAnswer(observations.observerAccuracy),
       selfAccuracy: readBinaryAnswer(observations.selfAccuracy),
     },
@@ -186,13 +181,9 @@ function readCachedPartFour(value: unknown): PartFourState {
 
 function readRemotePartFour(value: unknown): PartFourState {
   const partFour = (value ?? {}) as Record<string, unknown>
-  const observerConnection = partFour.observerZeroConnection
   return {
     watchedVideo: readBinaryAnswer(partFour.watchedVideo),
     observations: {
-      observerConnection: observerConnection === 'subject-1' || observerConnection === 'subject-2'
-        ? observerConnection
-        : null,
       observerAccuracy: readBinaryAnswer(partFour.observerZeroMoreAccurateThanInaccurate),
       selfAccuracy: readBinaryAnswer(partFour.participantMoreAccurateThanObserverZero),
     },
@@ -216,7 +207,7 @@ export function createInitialExperiment00StudyState(participantId: string): Expe
     part02: emptyRatings(),
     part03: emptyRatings(),
     part04: emptyPartFour(),
-    part05: { connectionRating: null },
+    part05: { wantsFurtherConnection: null },
     observationsPart01: emptyObservations(),
     observationsPart02: emptyObservations(),
     observationsPart03: emptyObservations(),
@@ -247,8 +238,8 @@ export function parseCachedExperiment00StudyState(
     part03: readRatings(cached.part03),
     part04: readCachedPartFour(cached.part04),
     part05: {
-      connectionRating: readRating(
-        (cached.part05 as Record<string, unknown> | undefined)?.connectionRating,
+      wantsFurtherConnection: readBinaryAnswer(
+        (cached.part05 as Record<string, unknown> | undefined)?.wantsFurtherConnection,
       ),
     },
     observationsPart01: readCachedObservations(cached.observationsPart01),
@@ -267,13 +258,13 @@ export function serializeExperiment00StudyState(
     includesOtherSubject: boolean,
   ) => ({
     ...ratings,
-    observationSelectedSubject: observations.selectedSubject,
+    moreConfidentSubjectRating: observations.moreConfidentSubjectRating,
     observationReason: observations.reason,
     chosenSubjectWords: observations.chosenSubjectWords.slice(0, wordCount),
     ...(includesOtherSubject
       ? { otherSubjectWords: observations.otherSubjectWords.slice(0, wordCount) }
       : {}),
-    selfWords: observations.selfWords.slice(0, wordCount),
+    ...(!includesOtherSubject ? { selfWords: observations.selfWords.slice(0, wordCount) } : {}),
   })
 
   return {
@@ -284,16 +275,15 @@ export function serializeExperiment00StudyState(
     welcome_ethnicity: state.welcome.ethnicity,
     part_01_data: serializePart(state.part01, state.observationsPart01, 5, true),
     part_02_data: serializePart(state.part02, state.observationsPart02, 3, false),
-    part_03_data: serializePart(state.part03, state.observationsPart03, 3, false),
+    part_03_data: serializePart(state.part03, state.observationsPart03, 3, true),
     part_04_data: {
       watchedVideo: state.part04.watchedVideo,
-      observerZeroConnection: state.part04.observations.observerConnection,
       observerZeroMoreAccurateThanInaccurate: state.part04.observations.observerAccuracy,
       participantMoreAccurateThanObserverZero: state.part04.observations.selfAccuracy,
       postRevealComparison: state.part04.comparison,
     },
     part_05_data: {
-      connectionRatingToCreator: state.part05.connectionRating,
+      wantsFurtherConnection: state.part05.wantsFurtherConnection,
     },
   }
 }
@@ -336,10 +326,10 @@ function deserializeStudyStateRecord(
     part02: readRatings(part02),
     part03: readRatings(part03),
     part04: readRemotePartFour(record.part_04_data),
-    part05: { connectionRating: readRating(part05.connectionRatingToCreator) },
+    part05: { wantsFurtherConnection: readBinaryAnswer(part05.wantsFurtherConnection) },
     observationsPart01: readRemoteObservations(part01, 5, true),
     observationsPart02: readRemoteObservations(part02, 3, false),
-    observationsPart03: readRemoteObservations(part03, 3, false),
+    observationsPart03: readRemoteObservations(part03, 3, true),
   }
 }
 
