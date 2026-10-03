@@ -95,6 +95,7 @@ test('Experiment 00 welcome flow persists one anonymous study record', async ({ 
   await expect(page.getByLabel('QUELLE EST VOTRE ORIGINE ETHNIQUE ?')).toHaveText('BLANC·HE')
   expect((await page.evaluate(() => Object.keys(window.localStorage))).sort()).toEqual([
     'system-self-experiment-00-study',
+    'system-self-language-preference',
     'systemself_experiment_00_participant_id',
   ].sort())
 
@@ -106,15 +107,16 @@ test('Experiment 00 welcome flow persists one anonymous study record', async ({ 
   await expect(page.getByLabel('QUEL EST VOTRE PAYS ?')).toHaveText('France')
 
   await page.reload()
-  await expect(page.getByText(new RegExp(`YOU ARE SUBJECT ${firstSubjectId}`))).toBeVisible()
-  await expect(page.getByLabel('WHAT IS YOUR AGE?')).toHaveText('28')
-  await expect(page.getByLabel('WHAT IS YOUR COUNTRY?')).toHaveText('France')
-  await expect(page.getByLabel('WHAT IS YOUR GENDER?')).toHaveText('WOMAN')
-  await expect(page.getByLabel('WHAT IS YOUR ETHNICITY?')).toHaveText('WHITE')
+  await expect(page.getByText(new RegExp(`VOUS ÊTES LE SUJET ${firstSubjectId}`))).toBeVisible()
+  await expect(page.getByLabel('QUEL ÂGE AVEZ-VOUS ?')).toHaveText('28')
+  await expect(page.getByLabel('QUEL EST VOTRE PAYS ?')).toHaveText('France')
+  await expect(page.getByLabel('QUEL EST VOTRE GENRE ?')).toHaveText('FEMME')
+  await expect(page.getByLabel('QUELLE EST VOTRE ORIGINE ETHNIQUE ?')).toHaveText('BLANC·HE')
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'black')
   await expect(page.locator('.welcome-continue-link')).toBeVisible()
   await page.locator('.welcome-continue-link').click()
   await expect(page).toHaveURL(/\/experiment\/00\/part-01$/)
-  await expect(page.getByRole('heading', { name: 'PART 01' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'PARTIE 01' })).toBeVisible()
 })
 
 test('Welcome questionnaire remains readable without horizontal overflow on mobile', async ({ page }) => {

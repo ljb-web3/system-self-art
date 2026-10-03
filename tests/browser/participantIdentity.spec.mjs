@@ -11,7 +11,7 @@ test('Supabase identity stays stable across duplicate initialization, refresh, l
   await page.goto('/experiment/00/welcome')
   const number = page.locator('.welcome-subject .subject-number')
   await expect(number).toHaveText('1024')
-  await expect(number).toHaveCSS('color', 'rgb(116, 116, 116)')
+  await expect(number).toHaveCSS('color', 'rgb(184, 184, 184)')
   await expect(page.getByText('YOU ARE SUBJECT 1024', { exact: true })).toBeVisible()
 
   const firstIdentity = await page.evaluate(({ participantIdKey, studyKey }) => ({
@@ -31,12 +31,14 @@ test('Supabase identity stays stable across duplicate initialization, refresh, l
 
   await page.getByRole('button', { name: 'FR', exact: true }).click()
   await expect(page.getByText('VOUS ÊTES LE SUJET 1024', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'WHITE', exact: true }).click()
+  await expect(number).toHaveCSS('color', 'rgb(116, 116, 116)')
   await page.getByRole('button', { name: 'BLACK', exact: true }).click()
   await expect(number).toHaveCSS('color', 'rgb(184, 184, 184)')
   expect(identityApi.calls).toHaveLength(2)
 
   await page.goto('/experiment/00/end')
-  await expect(page.getByText('THANK YOU, SUBJECT 1024', { exact: true })).toBeVisible()
+  await expect(page.getByText('MERCI, SUJET 1024', { exact: true })).toBeVisible()
   await expect(page.locator('.final-subject .subject-number')).toHaveText('1024')
   expect(await page.evaluate(key => localStorage.getItem(key), participantIdKey)).toBe(firstIdentity.participantId)
   expect(identityApi.participants.size).toBe(1)

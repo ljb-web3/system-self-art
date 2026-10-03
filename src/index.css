@@ -1633,6 +1633,74 @@ a {
     width: 100%;
   }
 
+  .experiment-main-part-page .mobile-part-media {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mobile-part-toggle {
+    width: 100%;
+    min-height: 64px;
+    padding: 12px;
+    cursor: pointer;
+    border: 1px solid var(--foreground);
+    color: var(--foreground);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .mobile-part-toggle:focus-visible {
+    outline: 1px solid var(--foreground);
+    outline-offset: 3px;
+  }
+
+  .mobile-part-media .timestamps {
+    margin-top: 4px;
+  }
+
+  .mobile-aggregate-results {
+    padding: 12px 0 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+  }
+
+  .mobile-aggregate-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .mobile-aggregate-group h3,
+  .mobile-aggregate-group p,
+  .mobile-aggregate-status {
+    margin: 0;
+    font: inherit;
+  }
+
+  .mobile-aggregate-group h3 {
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .mobile-aggregate-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .mobile-aggregate-row {
+    display: grid;
+    grid-template-columns: 3ch auto;
+    column-gap: 24px;
+  }
+
   .experiment-reveal-page {
     padding-bottom: 120px;
   }

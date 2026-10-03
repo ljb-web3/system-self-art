@@ -9,6 +9,11 @@ import {
 } from './experiment00ParticipantIdentity'
 import { Experiment00ParticipantIdentityProvider } from './Experiment00ParticipantIdentityProvider'
 import { experiment00PdfCopy } from './experiment00PdfCopy'
+import {
+  loadPartFiveCounts,
+  loadTopRatings,
+} from './experiment00Aggregates'
+import type { PartFiveCounts, RatingAggregate } from './experiment00Aggregates'
 
 type HomeRoute = { kind: 'home' }
 type ExperimentRoute = { kind: 'experiment'; series: string; part: string | null }
@@ -421,6 +426,23 @@ const translations = {
     },
     introduction: experiment00PdfCopy.fr.introduction,
     explanations: experiment00PdfCopy.fr.explanations,
+  },
+} as const
+
+const mobilePartText = {
+  en: {
+    watchVideo: 'CLICK HERE TO WATCH THE VIDEO',
+    otherAnswers: 'CLICK HERE TO SEE WHAT OTHER PEOPLE ANSWERED',
+    loading: 'LOADING...',
+    empty: 'NO OBSERVATIONS YET.',
+    error: 'RESULTS UNAVAILABLE.',
+  },
+  fr: {
+    watchVideo: 'CLIQUER ICI POUR VOIR LA VIDÉO',
+    otherAnswers: 'CLIQUER ICI POUR VOIR CE QUE LES AUTRES ONT RÉPONDU',
+    loading: 'CHARGEMENT...',
+    empty: 'AUCUNE OBSERVATION POUR LE MOMENT.',
+    error: 'RÉSULTATS INDISPONIBLES.',
   },
 } as const
 
@@ -1253,6 +1275,154 @@ function ExperimentWelcomePage({
   )
 }
 
+function useMobilePartViewport() {
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 700px)').matches)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 700px)')
+    const handleChange = () => setIsMobile(mediaQuery.matches)
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
+
+  return isMobile
+}
+
+function MobileRatingResults({ partNumber, language }: { partNumber: PartNumber; language: Language }) {
+  const [ratings, setRatings] = useState<RatingAggregate[] | null>(null)
+  const [failed, setFailed] = useState(false)
+  const requestRef = useRef<Promise<RatingAggregate[]> | null>(null)
+  const labels = translations[language].observations.subjects
+  const text = mobilePartText[language]
+
+  useEffect(() => {
+    let active = true
+    requestRef.current ??= loadTopRatings(partNumber)
+    void requestRef.current.then(result => {
+      if (active) setRatings(result)
+    }).catch(() => {
+      if (active) setFailed(true)
+    })
+    return () => { active = false }
+  }, [partNumber])
+
+  if (failed) return <p className="mobile-aggregate-status">{text.error}</p>
+  if (ratings === null) return <p className="mobile-aggregate-status">{text.loading}</p>
+  if (ratings.length === 0) return <p className="mobile-aggregate-status">{text.empty}</p>
+
+  return (
+    <div className="mobile-aggregate-groups">
+      {([1, 2] as const).map(subject => {
+        const rows = ratings.filter(row => row.subject === subject)
+        return (
+          <section key={subject} className="mobile-aggregate-group">
+            <h3>{labels[subject - 1]}</h3>
+            {rows.length === 0 ? (
+              <p className="mobile-aggregate-status">{text.empty}</p>
+            ) : (
+              <div className="mobile-aggregate-rows">
+                {rows.map(row => (
+                  <div key={row.rating} className="mobile-aggregate-row">
+                    <span>{row.rating}</span>
+                    <span>{row.count}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )
+      })}
+    </div>
+  )
+}
+
+function MobilePartFiveResults({ language }: { language: Language }) {
+  const [counts, setCounts] = useState<PartFiveCounts | null>(null)
+  const [failed, setFailed] = useState(false)
+  const requestRef = useRef<Promise<PartFiveCounts> | null>(null)
+  const text = mobilePartText[language]
+
+  useEffect(() => {
+    let active = true
+    requestRef.current ??= loadPartFiveCounts()
+    void requestRef.current.then(result => {
+      if (active) setCounts(result)
+    }).catch(() => {
+      if (active) setFailed(true)
+    })
+    return () => { active = false }
+  }, [])
+
+  if (failed) return <p className="mobile-aggregate-status">{text.error}</p>
+  if (counts === null) return <p className="mobile-aggregate-status">{text.loading}</p>
+  if (counts.yes === 0 && counts.no === 0) {
+    return <p className="mobile-aggregate-status">{text.empty}</p>
+  }
+
+  return (
+    <div className="mobile-aggregate-groups mobile-aggregate-binary">
+      <div className="mobile-aggregate-group">
+        <h3>{translations[language].partOne.yes}</h3>
+        <p>{counts.yes}</p>
+      </div>
+      <div className="mobile-aggregate-group">
+        <h3>{translations[language].partOne.no}</h3>
+        <p>{counts.no}</p>
+      </div>
+    </div>
+  )
+}
+
+function MobilePartMedia({
+  partNumber,
+  language,
+  videoLabel,
+  children,
+}: {
+  partNumber: PartNumber | '04' | '05'
+  language: Language
+  videoLabel: string
+  children: ReactNode
+}) {
+  const isMobile = useMobilePartViewport()
+  const [videoOpen, setVideoOpen] = useState(false)
+  const [resultsOpen, setResultsOpen] = useState(false)
+  const text = mobilePartText[language]
+
+  return (
+    <section className="part-media mobile-part-media" aria-label={videoLabel}>
+      {isMobile && (
+        <button
+          type="button"
+          className="mobile-part-toggle"
+          aria-expanded={videoOpen}
+          onClick={() => setVideoOpen(current => !current)}
+        >
+          {text.watchVideo}
+        </button>
+      )}
+      {(!isMobile || videoOpen) && children}
+      {isMobile && partNumber !== '04' && (
+        <button
+          type="button"
+          className="mobile-part-toggle"
+          aria-expanded={resultsOpen}
+          onClick={() => setResultsOpen(current => !current)}
+        >
+          {text.otherAnswers}
+        </button>
+      )}
+      {isMobile && resultsOpen && partNumber !== '04' && (
+        <div className="mobile-aggregate-results" aria-live="polite">
+          {partNumber === '05'
+            ? <MobilePartFiveResults language={language} />
+            : <MobileRatingResults partNumber={partNumber} language={language} />}
+        </div>
+      )}
+    </section>
+  )
+}
+
 function ExperimentPartPage({
   partNumber,
   language,
@@ -1307,7 +1477,7 @@ function ExperimentPartPage({
       <h2 className="part-title">{text.title}</h2>
 
       <div className="part-composition">
-        <section className="part-media" aria-label={text.video}>
+        <MobilePartMedia partNumber={partNumber} language={language} videoLabel={text.video}>
           <div className="video-placeholder">
             {partNumber === '01' ? (
               <iframe
@@ -1333,7 +1503,7 @@ function ExperimentPartPage({
               </button>
             ))}
           </div>
-        </section>
+        </MobilePartMedia>
 
         <section className="observation-introduction" aria-live="polite">
           <div className="part-main-content">
@@ -1879,11 +2049,11 @@ function ExperimentPartFourPage({
       <h2 className="part-title">{text.title}</h2>
 
       <div className="part-composition part-four-composition">
-        <section className="part-media" aria-label={text.video}>
+        <MobilePartMedia partNumber="04" language={language} videoLabel={text.video}>
           <div className="video-placeholder">
             <span>{text.video}</span>
           </div>
-        </section>
+        </MobilePartMedia>
 
         <section className="observation-introduction part-four-introduction">
           <div className="part-main-content">
@@ -2260,11 +2430,11 @@ function ExperimentPartFivePage({
       <h2 className="part-title">{text.title}</h2>
 
       <div className="part-composition part-five-composition">
-        <section className="part-media" aria-label={text.video}>
+        <MobilePartMedia partNumber="05" language={language} videoLabel={text.video}>
           <div className="video-placeholder">
             <span>{text.video}</span>
           </div>
-        </section>
+        </MobilePartMedia>
 
         <section className="observation-introduction part-five-introduction">
           <div className="part-main-content">
@@ -2437,8 +2607,30 @@ function ExperimentPage(props: ExperimentPageProps) {
 
 export default function ArtApp() {
   const [route, setRoute] = useState<Route>(readRoute)
-  const [language, setLanguage] = useState<Language>('en')
-  const [theme, setTheme] = useState<Theme>('white')
+  const [language, setLanguage] = useState<Language>(() =>
+    document.documentElement.lang === 'fr' ? 'fr' : 'en',
+  )
+  const [theme, setTheme] = useState<Theme>(() =>
+    document.documentElement.dataset.theme === 'white' ? 'white' : 'black',
+  )
+
+  function changeLanguage(nextLanguage: Language) {
+    try {
+      window.localStorage.setItem('system-self-language-preference', nextLanguage)
+    } catch {
+      // The control remains usable when storage is unavailable.
+    }
+    setLanguage(nextLanguage)
+  }
+
+  function changeTheme(nextTheme: Theme) {
+    try {
+      window.localStorage.setItem('system-self-theme-preference', nextTheme)
+    } catch {
+      // The control remains usable when storage is unavailable.
+    }
+    setTheme(nextTheme)
+  }
 
   useEffect(() => {
     const handlePopState = () => setRoute(readRoute())
@@ -2446,7 +2638,7 @@ export default function ArtApp() {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.lang = language
     document.documentElement.dataset.theme = theme
   }, [language, theme])
@@ -2462,8 +2654,8 @@ export default function ArtApp() {
       <HomePage
         language={language}
         theme={theme}
-        onLanguageChange={setLanguage}
-        onThemeChange={setTheme}
+        onLanguageChange={changeLanguage}
+        onThemeChange={changeTheme}
       />
     )
     : (
@@ -2472,8 +2664,8 @@ export default function ArtApp() {
           {...route}
           language={language}
           theme={theme}
-          onLanguageChange={setLanguage}
-          onThemeChange={setTheme}
+          onLanguageChange={changeLanguage}
+          onThemeChange={changeTheme}
         />
         {route.series === '00' && <StudyBackLink part={route.part} />}
       </>

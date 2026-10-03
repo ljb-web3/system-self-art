@@ -47,10 +47,11 @@ test('Part 04 follows its Observer Zero flow and persists every answer', async (
   await expect(page.getByRole('link', { name: /CONTINUER/ })).toBeVisible()
 
   await page.reload()
-  await expect(questions.nth(0).getByRole('button', { name: 'YES', exact: true }))
+  await expect(questions.nth(0).getByRole('button', { name: 'OUI', exact: true }))
     .toHaveAttribute('aria-pressed', 'true')
-  await expect(questions.nth(1).getByRole('button', { name: 'NO', exact: true }))
+  await expect(questions.nth(1).getByRole('button', { name: 'NON', exact: true }))
     .toHaveAttribute('aria-pressed', 'true')
+  await page.getByRole('button', { name: 'EN', exact: true }).click()
   await page.getByRole('link', { name: /CONTINUE/ }).click()
 
   await expect(page).toHaveURL(/\/part-04\/reveal$/)
